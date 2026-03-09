@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>作業表格</title>
+    <style>
+        /* 這裡設定表格的樣式，完全對應你的作業要求 */
+        table {
+            /* 要求 1：The borders to collapse into one border (邊框合併為單一邊框) */
+            border-collapse: collapse; 
+        }
+        
+        th, td {
+            /* 圖片中表格有黑線邊框，所以我們加上 1px 的實線黑色邊框 */
+            border: 1px solid black; 
+            
+            /* 要求 2：th, td padding 5px (內距 5 像素) */
+            padding: 5px; 
+            
+            /* 要求 3：Text aligns to left (文字靠左對齊) */
+            text-align: left; 
+        }
+    </style>
+</head>
+<body>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Student ID</th>
+        </tr>
+        <tr>
+            <td>Your name</td> 
+            <td>Your student ID</td> 
+        </tr>
+    </table>
+
+</body>
+</html>
