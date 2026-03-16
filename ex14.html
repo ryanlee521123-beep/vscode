@@ -5,34 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Overlapping Shapes</title>
     <style>
-        /* 建立一個容器來限制內部圖形的定位範圍 */
         .shape-container {
             position: relative; 
             margin: 50px;
         }
 
-        /* 繪製藍色長方形與黑色邊框 */
         .rectangle {
             width: 200px;
             height: 150px;
             background-color: blue;
             border: 4px solid black;
             
-            /* 使用絕對定位將長方形固定在容器的左上角 */
             position: absolute;
             top: 0;
             left: 0;
         }
 
-        /* 繪製黃色圓形與紅色邊框 */
         .circle {
             width: 130px;
             height: 130px;
             background-color: yellow;
             border: 4px solid red;
-            border-radius: 50%; /* 這是將正方形變成圓形的關鍵 */
+            border-radius: 50%;
             
-            /* 使用絕對定位，並透過調整 top 和 left 讓它與長方形重疊 */
             position: absolute;
             top: 10px;  
             left: 130px; 
