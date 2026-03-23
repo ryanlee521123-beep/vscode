@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World 邊框與背景練習</title>
+    <style>
+        /* 整體容器與字體設定 (讓畫面看起來接近你的截圖) */
+        body {
+            font-family: "Times New Roman", Times, serif;
+            padding: 50px;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* 三個區塊之間的間距 */
+            width: 400px;
+        }
+
+        /* 共用的文字與區塊設定 */
+        .box {
+            font-size: 32px;
+            font-weight: bold;
+            padding: 5px 15px;
+            color: black;
+        }
+
+        /* 第一個區塊：淺藍色背景，紅色雙實線邊框 */
+        .box1 {
+            background-color: #add8e6; /* 淺藍色 */
+            border: 6px double #e74c3c; /* 紅色雙線邊框 */
+        }
+
+        /* 第二個區塊：黃色背景，藍色單實線邊框，圓角 */
+        .box2 {
+            background-color: #ffff00; /* 黃色 */
+            border: 3px solid #3498db; /* 藍色單實線 */
+            border-radius: 10px;       /* 圓角設定 */
+        }
+
+        /* 第三個區塊：綠色背景，灰色圓點邊框 */
+        .box3 {
+            background-color: #3cb371; /* 綠色 */
+            border: 8px dotted #808080; /* 灰色圓點邊框 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="box box1">Hello World</div>
+        <div class="box box2">Hello World</div>
+        <div class="box box3">Hello World</div>
+    </div>
+
+</body>
+</html>
