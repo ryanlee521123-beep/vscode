@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Headings 練習</title>
+    <style>
+        /* 基礎畫布與容器設定 */
+        body {
+            font-family: "Times New Roman", Times, serif; /* 設定為圖片中的襯線字體 */
+            padding: 50px;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* 加上陰影模擬截圖的卡片感 */
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 第一個標題 (Heading 1) */
+        h1 {
+            font-size: 38px;
+            margin-top: 0;
+            margin-bottom: 30px;
+            
+            /* 文字特效 (texts) */
+            text-shadow: 3px 3px 0px #ffb6c1; /* 產生粉紅色的文字陰影 */
+            
+            /* 頂部粗黑線 */
+            text-decoration: overline; /* 加上頂部線 */
+        }
+
+        /* 第二個標題 (Heading 2) */
+        h2 {
+            font-size: 28px;
+            font-weight: normal;
+            margin-bottom: 40px;
+            padding: 5px 10px;
+            
+            /* 字體設定 (fonts) */
+            font-style: italic; /* 斜體字 */
+
+            /* 輪廓與邊框設定 (outlines) */
+            border: 1px solid black;     /* 內層的黑色細實線邊框 */
+            outline: 3px solid #d4d400;  /* 外層的黃綠色輪廓線 */
+        }
+
+        /* 第三個標題 (Heading 3) */
+        h3 {
+            font-size: 22px;
+            margin-bottom: 0;
+            
+            /* 文字對齊與裝飾 (texts) */
+            text-align: right;          /* 靠右對齊 */
+            text-decoration: underline; /* 加上底線 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>This is heading 1</h1>
+        <h2>This is heading 2</h2>
+        <h3>This is heading 3</h3>
+    </div>
+
+</body>
+</html>
