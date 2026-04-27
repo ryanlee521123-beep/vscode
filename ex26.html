@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Image Styling Practice</title>
+    <style>
+        .image-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .img-left {
+            width: 33%;
+            height: 300px;
+            border-radius: 18px; 
+            object-fit: cover;   
+        }
+
+        .img-middle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 2px solid #ccc; 
+        }
+
+        .img-right {
+            width: 33%;
+            height: 300px;
+            object-fit: fill;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="image-container">
+        <img src="https://picsum.photos/id/1018/800/600" alt="Left Image" class="img-left">
+        
+        <img src="https://picsum.photos/id/1015/800/600" alt="Middle Image" class="img-middle">
+        
+        <img src="https://picsum.photos/id/1018/800/600" alt="Right Image" class="img-right">
+    </div>
+
+</body>
+</html>
