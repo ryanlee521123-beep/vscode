@@ -23,17 +23,16 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        /* --- SPECIFIED BUTTON CSS --- */
         .info-btn {
-            height: 22px;              /* size: h22 */
-            border-radius: 8px;        /* size: R8 */
-            background-color: #ffffff; /* background #ffffff */
-            border: 1px solid #2f2f2f; /* outline 1px #2f2f2f */
-            color: #2f2f2f;            /* Color : #2f2f2f */
-            font-family: 'Roboto', sans-serif; /* Font style: Roboto */
-            font-size: 13px;           /* Roboto Regular 13px */
+            height: 22px; 
+            border-radius: 8px;
+            background-color: #ffffff;
+            border: 1px solid #2f2f2f;
+            color: #2f2f2f;       
+            font-family: 'Roboto', sans-serif; 
+            font-size: 13px;
             font-weight: 400;
-            padding: 0 18px;           /* 18px spacing on left/right from redlines */
+            padding: 0 18px;         
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -45,7 +44,6 @@
             background-color: #f0f0f0;
         }
 
-        /* --- LAYOUT & IMAGE --- */
         .header-area {
             display: flex;
             justify-content: flex-end;
@@ -54,7 +52,7 @@
 
         .image-container {
             width: 450px;
-            height: 240px; /* Default 450x240 from mockup */
+            height: 240px; 
             background-color: #e0e0e0;
             overflow: hidden;
             position: relative;
@@ -66,21 +64,18 @@
             object-fit: cover;
         }
 
-        /* --- DETAILED INFO PANEL --- */
         .details-panel {
-            display: none; /* Hidden by default */
+            display: none;
             width: 450px;
             border: 1px solid #cfddff;
             border-top: none;
             box-sizing: border-box;
         }
 
-        /* Class toggled by JavaScript */
         .details-panel.show {
             display: block; 
         }
 
-        /* Recreating the green table rows from the mockup */
         .detail-row {
             padding: 6px 10px;
             font-size: 12px;
@@ -89,11 +84,11 @@
         }
 
         .detail-row:nth-child(odd) {
-            background-color: #b5ebb5; /* Light green */
+            background-color: #b5ebb5;
         }
 
         .detail-row:nth-child(even) {
-            background-color: #8ce48c; /* Darker green */
+            background-color: #8ce48c;
         }
     </style>
 </head>
@@ -117,13 +112,10 @@
     </div>
 
     <script>
-        // Grab the button and the panel from the DOM
         const button = document.getElementById('toggleInfoBtn');
         const panel = document.getElementById('infoPanel');
 
-        // Add a click event listener to the button
         button.addEventListener('click', function() {
-            // Toggle the 'show' class on the panel to reveal/hide it
             panel.classList.toggle('show');
         });
     </script>
