@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Layout Practice</title>
+    <style>
+        body {
+            background-color: #5cb3ff; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        
+        .header {
+            background-color: #a4ce4e; 
+            height: 120px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .middle-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .box-teal {
+            background-color: #00bcd4;
+            height: 150px;
+            border-radius: 4px;
+        }
+
+        .bottom-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 10px;
+        }
+
+        .box-gray {
+            background-color: #e8eaea;
+            height: 80px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 480px) {
+            
+            .middle-section {
+                grid-template-columns: 1fr; 
+            }
+
+            .box-teal {
+                height: 80px; 
+            }
+
+            .bottom-section {
+                grid-template-columns: repeat(2, 1fr); 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header"></div>
+        
+        <div class="middle-section">
+            <div class="box-teal"></div>
+            <div class="box-teal"></div>
+            <div class="box-teal"></div>
+        </div>
+        
+        <div class="bottom-section">
+            <div class="box-gray"></div>
+            <div class="box-gray"></div>
+            <div class="box-gray"></div>
+            <div class="box-gray"></div>
+        </div>
+    </div>
+
+</body>
+</html>
