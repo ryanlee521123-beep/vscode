@@ -5,7 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PomoGrowth - 專注力電子雞</title>
     <style>
-        /* 基礎重置與背景設定 (深色新擬態風格) */
+        /* 🌟 新增：讓 CSS 知道 --progress 是一個可以做動畫的百分比 🌟 */
+        @property --progress {
+            syntax: '<percentage>';
+            inherits: false;
+            initial-value: 0%;
+        }
+
+        /* 基礎重置與背景設定 */
         body {
             background-color: #2b3a4a;
             color: #e0e0e0;
@@ -17,25 +24,24 @@
             margin: 0;
         }
 
-        /* --- 新增的外層：負責黃色發光邊框與立體陰影 --- */
+        /* 外層：負責黃色發光邊框與立體陰影 */
         .container-wrapper {
-            /* 這裡使用黃色 (#ffd700) 的圓錐漸層 */
             background: conic-gradient(#ffd700 var(--progress, 0%), transparent 0%);
-            padding: 4px; /* 這決定了黃色進度條的粗細 */
-            border-radius: 34px; /* 比內層的 30px 大一點，保持圓角和諧 */
-            /* 陰影移到這裡 */
+            padding: 4px; 
+            border-radius: 36px; 
             box-shadow: 15px 15px 30px #1a232c, 
                        -15px -15px 30px #3c5168;
             width: 350px;
+            /* 🌟 關鍵：加上 1 秒的平滑線性動畫 🌟 */
+            transition: --progress 1s linear; 
         }
 
         /* 主容器 */
         .container {
             text-align: center;
             background: #2b3a4a;
-            padding: 36px 46px; /* 稍微縮小一點來容納外層的 4px 邊框 */
-            border-radius: 30px;
-            /* 已經把陰影移到外層了，這裡不用陰影 */
+            padding: 40px 46px; 
+            border-radius: 36px;
         }
 
         h1 {
@@ -45,7 +51,7 @@
             margin-bottom: 30px;
         }
 
-        /* ----- 等級與經驗值系統 ----- */
+        /* 等級與經驗值系統 */
         .level-container {
             text-align: left;
             margin-bottom: 20px;
@@ -90,7 +96,6 @@
             transition: transform 0.3s ease;
         }
 
-        /* 寵物專注時的浮動動畫 */
         .pet-focus {
             animation: float 2s infinite ease-in-out;
         }
@@ -145,7 +150,6 @@
 </head>
 <body>
 
-    <!-- 🌟 新增的外層包裹器，用來顯示倒數邊框 🌟 -->
     <div class="container-wrapper" id="progress-wrapper">
         <div class="container">
             <h1>🌱 PomoGrowth</h1>
@@ -169,7 +173,7 @@
                 <button id="reset-btn">重置</button>
             </div>
         </div>
-    </div> <!-- 外層包裹器結束 -->
+    </div> 
 
     <script>
         let timer;
@@ -194,6 +198,19 @@
         const xpBar = document.getElementById('xp-bar');
         const progressWrapper = document.getElementById('progress-wrapper'); 
 
+        // 🌟 新增：讓進度條瞬間歸零的函數（不帶動畫）
+        function resetProgressBarInstantly() {
+            if (progressWrapper) {
+                progressWrapper.style.transition = 'none'; // 瞬間關掉平滑動畫
+                progressWrapper.style.setProperty('--progress', `0%`);
+                
+                // 等 50 毫秒後，再把平滑動畫開回來
+                setTimeout(() => {
+                    progressWrapper.style.transition = '--progress 1s linear';
+                }, 50);
+            }
+        }
+
         function updateLevelDisplay() {
             const neededXP = getXpNeeded(level); 
             levelText.textContent = `Pomo-chan's Focus Level: ${level} (${currentXP}/${neededXP} XP)`;
@@ -206,7 +223,6 @@
             while (currentXP >= getXpNeeded(level)) {
                 currentXP -= getXpNeeded(level); 
                 level++; 
-                console.log(`Level Up! 現在是等級 ${level}`);
             }
             updateLevelDisplay();
         }
@@ -225,9 +241,15 @@
                 startBtn.textContent = '繼續';
                 pet.classList.remove('pet-focus');
                 petStatus.textContent = '計時已暫停';
+                
+                // 暫停時把邊框動畫停住
+                if (progressWrapper) progressWrapper.style.transition = 'none';
             } else {
                 isRunning = true;
                 startBtn.textContent = '暫停';
+                
+                // 恢復時把動畫開回來
+                if (progressWrapper) progressWrapper.style.transition = '--progress 1s linear';
 
                 if (isFocusMode) {
                     pet.textContent = '📚'; 
@@ -255,13 +277,16 @@
                             pet.classList.remove('pet-focus');
                             petStatus.textContent = '太棒了！獲得 25 XP，眼睛休息一下吧。';
                         }
+                        // 🌟 切換模式時瞬間歸零進度條 🌟
+                        resetProgressBarInstantly(); 
                     } else {
                         timeLeft--;
                     }
 
                     updateDisplay();
 
-                    if (progressWrapper) {
+                    // 正常倒數時，給予新的百分比，CSS會自動平滑移動
+                    if (progressWrapper && timeLeft > 0) {
                         const totalTime = isFocusMode ? 10 : 5; 
                         const percent = ((totalTime - timeLeft) / totalTime) * 100;
                         progressWrapper.style.setProperty('--progress', `${percent}%`);
@@ -278,9 +303,8 @@
             timeLeft = 10;        
             updateDisplay();      
             
-            if (progressWrapper) {
-                progressWrapper.style.setProperty('--progress', `0%`);
-            }
+            // 🌟 重置時瞬間歸零進度條 🌟
+            resetProgressBarInstantly();
             
             startBtn.textContent = '開始專注'; 
             pet.textContent = '🥚';
