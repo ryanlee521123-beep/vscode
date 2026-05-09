@@ -198,13 +198,12 @@
         const xpBar = document.getElementById('xp-bar');
         const progressWrapper = document.getElementById('progress-wrapper'); 
 
-        // 🌟 新增：讓進度條瞬間歸零的函數（不帶動畫）
+        // 🌟 修改：讓進度條瞬間回到滿血 (100%)
         function resetProgressBarInstantly() {
             if (progressWrapper) {
-                progressWrapper.style.transition = 'none'; // 瞬間關掉平滑動畫
-                progressWrapper.style.setProperty('--progress', `0%`);
+                progressWrapper.style.transition = 'none'; 
+                progressWrapper.style.setProperty('--progress', `100%`); // 從 0% 改成 100%
                 
-                // 等 50 毫秒後，再把平滑動畫開回來
                 setTimeout(() => {
                     progressWrapper.style.transition = '--progress 1s linear';
                 }, 50);
@@ -285,13 +284,13 @@
 
                     updateDisplay();
 
-                    // 正常倒數時，給予新的百分比，CSS會自動平滑移動
-                    if (progressWrapper && timeLeft > 0) {
+                    // 🌟 修改：倒數計時的公式與條件
+                    if (progressWrapper && timeLeft >= 0) { // 把 timeLeft > 0 改成 >= 0 確保最後一秒有執行
                         const totalTime = isFocusMode ? 10 : 5; 
-                        const percent = ((totalTime - timeLeft) / totalTime) * 100;
+                        // 公式改成直接用 timeLeft 除以總時間，就會變成倒退縮小
+                        const percent = (timeLeft / totalTime) * 100;
                         progressWrapper.style.setProperty('--progress', `${percent}%`);
-                    }
-                    
+                    }                  
                 }, 1000);
             }
         }
@@ -317,6 +316,8 @@
 
         updateDisplay();
         updateLevelDisplay();
+        // 🌟 新增這行：網頁剛載入時，把進度條設為滿的
+        if (progressWrapper) progressWrapper.style.setProperty('--progress', `100%`);
     </script>
 </body>
 </html>
