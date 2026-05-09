@@ -17,16 +17,25 @@
             margin: 0;
         }
 
+        /* --- 🌟 新增的外層：負責黃色發光邊框與立體陰影 --- */
+        .container-wrapper {
+            /* 這裡使用黃色 (#ffd700) 的圓錐漸層 */
+            background: conic-gradient(#ffd700 var(--progress, 0%), transparent 0%);
+            padding: 4px; /* 這決定了黃色進度條的粗細 */
+            border-radius: 34px; /* 比內層的 30px 大一點，保持圓角和諧 */
+            /* 陰影移到這裡 */
+            box-shadow: 15px 15px 30px #1a232c, 
+                       -15px -15px 30px #3c5168;
+            width: 350px;
+        }
+
         /* 主容器 */
         .container {
             text-align: center;
             background: #2b3a4a;
-            padding: 40px 50px;
+            padding: 36px 46px; /* 稍微縮小一點來容納外層的 4px 邊框 */
             border-radius: 30px;
-            /* 新擬態陰影：一個亮面，一個暗面 */
-            box-shadow: 15px 15px 30px #1a232c, 
-                       -15px -15px 30px #3c5168;
-            width: 350px;
+            /* 已經把陰影移到外層了，這裡不用陰影 */
         }
 
         h1 {
@@ -36,7 +45,7 @@
             margin-bottom: 30px;
         }
 
-        /* ----- 新增：等級與經驗值系統 ----- */
+        /* ----- 等級與經驗值系統 ----- */
         .level-container {
             text-align: left;
             margin-bottom: 20px;
@@ -51,11 +60,10 @@
         }
 
         .progress-bar-bg {
-            background: #1e2936; /* 較深的背景 */
+            background: #1e2936;
             border-radius: 10px;
             height: 10px;
             width: 100%;
-            /* 內陰影營造凹槽感 */
             box-shadow: inset 3px 3px 6px #151d26, 
                         inset -3px -3px 6px #273546;
             overflow: hidden;
@@ -64,12 +72,11 @@
         .progress-bar-fill {
             background: #88c0d0;
             height: 100%;
-            width: 0%; /* 透過 JS 動態控制 */
+            width: 0%; 
             border-radius: 10px;
-            transition: width 0.5s ease-out; /* 進度條動畫 */
-            box-shadow: 0 0 8px rgba(136, 192, 208, 0.6); /* 微光暈效果 */
+            transition: width 0.5s ease-out; 
+            box-shadow: 0 0 8px rgba(136, 192, 208, 0.6); 
         }
-        /* ---------------------------------- */
 
         /* 寵物展示區 */
         .pet-container {
@@ -108,7 +115,7 @@
             letter-spacing: 2px;
         }
 
-        /* 按鈕設計 (新擬態) */
+        /* 按鈕設計 */
         .controls {
             display: flex;
             justify-content: space-around;
@@ -130,7 +137,6 @@
         }
 
         button:active {
-            /* 點擊時變成內陰影 */
             box-shadow: inset 8px 8px 16px #1a232c, 
                        inset -8px -8px 16px #3c5168;
             color: #88c0d0;
@@ -139,49 +145,46 @@
 </head>
 <body>
 
-    <div class="container">
-        <h1>🌱 PomoGrowth</h1>
-        
-        <!-- 新增：等級進度條區塊 -->
-        <div class="level-container">
-            <div id="level-text">Pomo-chan's Focus Level: 1 (0/100 XP)</div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="xp-bar"></div>
+    <!-- 🌟 新增的外層包裹器，用來顯示倒數邊框 🌟 -->
+    <div class="container-wrapper" id="progress-wrapper">
+        <div class="container">
+            <h1>🌱 PomoGrowth</h1>
+            
+            <div class="level-container">
+                <div id="level-text">Pomo-chan's Focus Level: 1 (0/100 XP)</div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="xp-bar"></div>
+                </div>
+            </div>
+
+            <div class="pet-container">
+                <div id="pet">🥚</div> 
+                <p id="pet-status">等待專注中...</p>
+            </div>
+
+            <div id="time-display">00:10</div>
+
+            <div class="controls">
+                <button id="start-btn">開始專注</button>
+                <button id="reset-btn">重置</button>
             </div>
         </div>
-
-        <div class="pet-container">
-            <div id="pet">🥚</div> 
-            <p id="pet-status">等待專注中...</p>
-        </div>
-
-        <div id="time-display">00:10</div>
-
-        <div class="controls">
-            <button id="start-btn">開始專注</button>
-            <button id="reset-btn">重置</button>
-        </div>
-    </div>
+    </div> <!-- 外層包裹器結束 -->
 
     <script>
-        // --- 計時器相關變數 ---
         let timer;
-        let timeLeft = 10; // 測試用 10 秒 (正式版可改回 25 * 60)
+        let timeLeft = 10; 
         let isRunning = false;
-        let isFocusMode = true; // true = 專注模式, false = 休息模式
+        let isFocusMode = true; 
 
-        // --- 經驗值相關變數 ---
         let level = 1;
         let currentXP = 0;
-        const xpRewardPerSession = 25; // 每次完成「專注」獲得的經驗值
+        const xpRewardPerSession = 25; 
 
-        // 新增：動態計算當前等級所需的經驗值
         function getXpNeeded(currentLevel) {
             return 100 + (currentLevel - 1) * 50; 
-            // 指數成長：return Math.floor(100 * Math.pow(1.2, currentLevel - 1)); 
         }
 
-        // 取得 DOM 元素
         const timeDisplay = document.getElementById('time-display');
         const startBtn = document.getElementById('start-btn');
         const resetBtn = document.getElementById('reset-btn');
@@ -191,56 +194,41 @@
         const xpBar = document.getElementById('xp-bar');
         const progressWrapper = document.getElementById('progress-wrapper'); 
 
-        // 更新經驗值與進度條畫面
         function updateLevelDisplay() {
-            // 取得當前等級到底需要多少 XP
             const neededXP = getXpNeeded(level); 
-            
             levelText.textContent = `Pomo-chan's Focus Level: ${level} (${currentXP}/${neededXP} XP)`;
             const progressPercent = (currentXP / neededXP) * 100;
             xpBar.style.width = `${progressPercent}%`;
         }
 
-        // 獲得經驗值並檢查是否升級
         function gainXP(amount) {
             currentXP += amount;
-            
-            // 處理升級邏輯：只要當前 XP 大於或等於「當前等級需要的 XP」，就觸發升級
             while (currentXP >= getXpNeeded(level)) {
-                // 先扣除當前等級所需的 XP
                 currentXP -= getXpNeeded(level); 
-                level++; // 等級 +1
+                level++; 
                 console.log(`Level Up! 現在是等級 ${level}`);
             }
-            
-            // 更新畫面
             updateLevelDisplay();
         }
 
-        // 更新畫面上的時間
         function updateDisplay() {
-            // 加上安全鎖：如果 timeLeft 是負數，強制當作 0 處理
             const safeTime = Math.max(0, timeLeft);
             const minutes = Math.floor(safeTime / 60);
             const seconds = safeTime % 60;
             timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        // 開始或暫停計時器
         function toggleTimer() {
             if (isRunning) {
-                // 暫停邏輯
                 clearInterval(timer);
                 isRunning = false;
                 startBtn.textContent = '繼續';
                 pet.classList.remove('pet-focus');
                 petStatus.textContent = '計時已暫停';
             } else {
-                // 開始邏輯
                 isRunning = true;
                 startBtn.textContent = '暫停';
 
-                // 確保每次按下繼續時，寵物狀態是正確的
                 if (isFocusMode) {
                     pet.textContent = '📚'; 
                     pet.classList.add('pet-focus'); 
@@ -251,36 +239,28 @@
                     petStatus.textContent = '休息中...';
                 }
 
-                // 每秒執行一次
                 timer = setInterval(() => {
-                    
-                    // 1. 先檢查時間是不是已經歸零了
                     if (timeLeft <= 0) {
-                        isFocusMode = !isFocusMode; // 反轉狀態
+                        isFocusMode = !isFocusMode; 
                         
                         if (isFocusMode) {
-                            // 自動切換回專注模式
                             timeLeft = 10; 
                             pet.textContent = '📚';
                             pet.classList.add('pet-focus');
                             petStatus.textContent = '休息結束，自動開始專注！';
                         } else {
-                            // 自動切換到休息模式
-                            gainXP(xpRewardPerSession); // 給經驗值
+                            gainXP(xpRewardPerSession); 
                             timeLeft = 5; 
                             pet.textContent = '💤';
                             pet.classList.remove('pet-focus');
                             petStatus.textContent = '太棒了！獲得 25 XP，眼睛休息一下吧。';
                         }
                     } else {
-                        // 2. 如果時間還沒到，才正常扣一秒
                         timeLeft--;
                     }
 
-                    // 3. 更新畫面 (這時顯示的絕對是安全的正確數字)
                     updateDisplay();
 
-                    // 4. 安全地更新外框進度條 (加上 if 防錯，就算 HTML 沒寫對也不會讓計時器壞掉)
                     if (progressWrapper) {
                         const totalTime = isFocusMode ? 10 : 5; 
                         const percent = ((totalTime - timeLeft) / totalTime) * 100;
@@ -290,32 +270,27 @@
                 }, 1000);
             }
         }
-        // 重置計時器
+
         function resetTimer() {
-            clearInterval(timer); // 停止計時器
-            isRunning = false;    // 將狀態設為停止
-            isFocusMode = true;   // 切換回專注模式
-            timeLeft = 10;        // 時間重置 (測試用 10 秒)
-            updateDisplay();      // 更新畫面時間
+            clearInterval(timer); 
+            isRunning = false;    
+            isFocusMode = true;   
+            timeLeft = 10;        
+            updateDisplay();      
             
-            // 將外框進度條歸零
             if (progressWrapper) {
                 progressWrapper.style.setProperty('--progress', `0%`);
             }
             
             startBtn.textContent = '開始專注'; 
-            
-            // 將寵物狀態還原
             pet.textContent = '🥚';
             pet.classList.remove('pet-focus');
             petStatus.textContent = '等待專注中...';
         }
 
-        // 綁定按鈕事件
         startBtn.addEventListener('click', toggleTimer);
         resetBtn.addEventListener('click', resetTimer);
 
-        // 初始化顯示
         updateDisplay();
         updateLevelDisplay();
     </script>
