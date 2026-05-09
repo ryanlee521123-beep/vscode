@@ -281,15 +281,20 @@
         }
         // 重置計時器
         function resetTimer() {
-            clearInterval(timer);
-            isRunning = false;
-            isFocusMode = true;
-            timeLeft = 10; // 測試用 10 秒
-            updateDisplay();
+            clearInterval(timer); // 停止計時器
+            isRunning = false;    // 將狀態設為停止
+            isFocusMode = true;   // 切換回專注模式
+            timeLeft = 10;        // 時間重置 (測試用 10 秒)
+            updateDisplay();      // 更新畫面時間
             
-            progressWrapper.style.setProperty('--progress', `0%`);
+            // 將外框進度條歸零
+            if (progressWrapper) {
+                progressWrapper.style.setProperty('--progress', `0%`);
+            }
             
-            startBtn.textContent = '開始專注';
+            startBtn.textContent = '開始專注'; 
+            
+            // 將寵物狀態還原
             pet.textContent = '🥚';
             pet.classList.remove('pet-focus');
             petStatus.textContent = '等待專注中...';
