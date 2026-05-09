@@ -182,10 +182,9 @@
         const resetBtn = document.getElementById('reset-btn');
         const pet = document.getElementById('pet');
         const petStatus = document.getElementById('pet-status');
-        
-        // 取得進度條 DOM 元素
         const levelText = document.getElementById('level-text');
         const xpBar = document.getElementById('xp-bar');
+        const progressWrapper = document.getElementById('progress-wrapper'); 
 
         // 更新經驗值與進度條畫面
         function updateLevelDisplay() {
@@ -198,14 +197,12 @@
         function gainXP(amount) {
             currentXP += amount;
             
-            // 處理升級邏輯 (支援一次獲得大量 XP 連續升級的情況)
+            // 處理升級邏輯
             while (currentXP >= xpNeededPerLevel) {
                 currentXP -= xpNeededPerLevel;
                 level++;
                 console.log(`Level Up! 現在是等級 ${level}`);
             }
-            
-            // 更新畫面
             updateLevelDisplay();
         }
 
@@ -230,11 +227,15 @@
                 isRunning = true;
                 startBtn.textContent = '暫停';
 
-                // 根據模式改變寵物狀態
+                // 確保每次按下繼續時，寵物狀態是正確的
                 if (isFocusMode) {
                     pet.textContent = '📚'; 
                     pet.classList.add('pet-focus'); 
                     petStatus.textContent = '小怪獸陪你一起專注中！';
+                } else {
+                    pet.textContent = '💤'; 
+                    pet.classList.remove('pet-focus');
+                    petStatus.textContent = '休息中...';
                 }
 
                 // 每秒執行一次
@@ -242,36 +243,36 @@
                     timeLeft--;
                     updateDisplay();
 
+                    // 計算邊框進度條百分比
+                    const totalTime = isFocusMode ? 10 : 5; 
+                    const percent = ((totalTime - timeLeft) / totalTime) * 100;
+                    progressWrapper.style.setProperty('--progress', `${percent}%`);
+
+                    // 🌟 核心修改：時間到 0 時，不停止計時器，直接無縫切換模式 🌟
                     if (timeLeft <= 0) {
-                        clearInterval(timer);
-                        isRunning = false;
-                        switchMode(); // 時間到，切換模式
+                        isFocusMode = !isFocusMode; // 反轉狀態
+                        
+                        if (isFocusMode) {
+                            // 自動切換回專注模式
+                            timeLeft = 10; 
+                            pet.textContent = '📚';
+                            pet.classList.add('pet-focus');
+                            petStatus.textContent = '休息結束，自動開始專注！';
+                        } else {
+                            // 自動切換到休息模式
+                            gainXP(xpRewardPerSession); // 給經驗值
+                            timeLeft = 5; 
+                            pet.textContent = '💤';
+                            pet.classList.remove('pet-focus');
+                            petStatus.textContent = '太棒了！獲得 25 XP，眼睛休息一下吧。';
+                        }
+                        
+                        // 模式切換時，邊框進度條瞬間歸零
+                        progressWrapper.style.setProperty('--progress', `0%`);
+                        updateDisplay();
                     }
                 }, 1000);
             }
-        }
-
-        // 切換 專注/休息 模式
-        function switchMode() {
-            isFocusMode = !isFocusMode; // 反轉狀態
-            
-            if (isFocusMode) {
-                // 切換回專注模式 (代表休息結束)
-                timeLeft = 10; // 測試用 10 秒
-                pet.textContent = '🥚';
-                petStatus.textContent = '準備好進入下一個專注了嗎？';
-                startBtn.textContent = '開始專注';
-            } else {
-                // 切換到休息模式 (代表專注結束！)
-                gainXP(xpRewardPerSession); // 給予經驗值！
-
-                timeLeft = 5; // 測試用 5 秒休息
-                pet.textContent = '💤'; 
-                pet.classList.remove('pet-focus');
-                petStatus.textContent = '太棒了！獲得 25 XP，讓眼睛休息一下吧。';
-                startBtn.textContent = '開始休息';
-            }
-            updateDisplay();
         }
 
         // 重置計時器
@@ -281,6 +282,8 @@
             isFocusMode = true;
             timeLeft = 10; // 測試用 10 秒
             updateDisplay();
+            
+            progressWrapper.style.setProperty('--progress', `0%`);
             
             startBtn.textContent = '開始專注';
             pet.textContent = '🥚';
@@ -294,7 +297,7 @@
 
         // 初始化顯示
         updateDisplay();
-        updateLevelDisplay(); // 初始化等級進度條
+        updateLevelDisplay();
     </script>
 </body>
 </html>
