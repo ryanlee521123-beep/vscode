@@ -208,8 +208,10 @@
 
         // 更新畫面上的時間
         function updateDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
+            // 加上安全鎖：如果 timeLeft 是負數，強制當作 0 處理
+            const safeTime = Math.max(0, timeLeft);
+            const minutes = Math.floor(safeTime / 60);
+            const seconds = safeTime % 60;
             timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
@@ -240,15 +242,8 @@
 
                 // 每秒執行一次
                 timer = setInterval(() => {
-                    timeLeft--;
-                    updateDisplay();
-
-                    // 計算邊框進度條百分比
-                    const totalTime = isFocusMode ? 10 : 5; 
-                    const percent = ((totalTime - timeLeft) / totalTime) * 100;
-                    progressWrapper.style.setProperty('--progress', `${percent}%`);
-
-                    // 🌟 核心修改：時間到 0 時，不停止計時器，直接無縫切換模式 🌟
+                    
+                    // 1. 先檢查時間是不是已經歸零了
                     if (timeLeft <= 0) {
                         isFocusMode = !isFocusMode; // 反轉狀態
                         
@@ -266,15 +261,24 @@
                             pet.classList.remove('pet-focus');
                             petStatus.textContent = '太棒了！獲得 25 XP，眼睛休息一下吧。';
                         }
-                        
-                        // 模式切換時，邊框進度條瞬間歸零
-                        progressWrapper.style.setProperty('--progress', `0%`);
-                        updateDisplay();
+                    } else {
+                        // 2. 如果時間還沒到，才正常扣一秒
+                        timeLeft--;
                     }
+
+                    // 3. 更新畫面 (這時顯示的絕對是安全的正確數字)
+                    updateDisplay();
+
+                    // 4. 安全地更新外框進度條 (加上 if 防錯，就算 HTML 沒寫對也不會讓計時器壞掉)
+                    if (progressWrapper) {
+                        const totalTime = isFocusMode ? 10 : 5; 
+                        const percent = ((totalTime - timeLeft) / totalTime) * 100;
+                        progressWrapper.style.setProperty('--progress', `${percent}%`);
+                    }
+                    
                 }, 1000);
             }
         }
-
         // 重置計時器
         function resetTimer() {
             clearInterval(timer);
