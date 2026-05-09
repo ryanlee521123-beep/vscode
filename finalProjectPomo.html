@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PomoGrowth - 專注力電子雞</title>
+    <style>
+        /* 基礎重置與背景設定 (深色新擬態風格) */
+        body {
+            background-color: #2b3a4a;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* 主容器 */
+        .container {
+            text-align: center;
+            background: #2b3a4a;
+            padding: 50px;
+            border-radius: 30px;
+            /* 新擬態陰影：一個亮面，一個暗面 */
+            box-shadow: 15px 15px 30px #1a232c, 
+                       -15px -15px 30px #3c5168;
+            width: 350px;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: #a3c2c2;
+        }
+
+        /* 寵物展示區 */
+        .pet-container {
+            margin: 30px 0;
+            min-height: 150px;
+        }
+
+        #pet {
+            font-size: 6rem;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        /* 寵物專注時的浮動動畫 */
+        .pet-focus {
+            animation: float 2s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        #pet-status {
+            font-size: 0.9rem;
+            color: #8fa6b8;
+            margin-top: 10px;
+        }
+
+        /* 計時器顯示 */
+        #time-display {
+            font-size: 4.5rem;
+            font-weight: bold;
+            color: #88c0d0;
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+
+        /* 按鈕設計 (新擬態) */
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+        button {
+            background: #2b3a4a;
+            color: #e0e0e0;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 8px 8px 16px #1a232c, 
+                       -8px -8px 16px #3c5168;
+            transition: all 0.2s ease;
+        }
+
+        button:active {
+            /* 點擊時變成內陰影 */
+            box-shadow: inset 8px 8px 16px #1a232c, 
+                       inset -8px -8px 16px #3c5168;
+            color: #88c0d0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🌱 PomoGrowth</h1>
+        
+        <div class="pet-container">
+            <!-- 這裡用 Emoji 暫代寵物圖片 -->
+            <div id="pet">🥚</div> 
+            <p id="pet-status">等待專注中...</p>
+        </div>
+
+        <div id="time-display">25:00</div>
+
+        <div class="controls">
+            <button id="start-btn">開始專注</button>
+            <button id="reset-btn">重置</button>
+        </div>
+    </div>
+
+    <script>
+        // 變數設定
+        let timer;
+        let timeLeft = 25 * 60; // 預設 25 分鐘
+        let isRunning = false;
+        let isFocusMode = true; // true = 專注模式, false = 休息模式
+
+        // 取得 DOM 元素
+        const timeDisplay = document.getElementById('time-display');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const pet = document.getElementById('pet');
+        const petStatus = document.getElementById('pet-status');
+
+        // 更新畫面上的時間
+        function updateDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            // padStart(2, '0') 可以讓個位數前面自動補 0 (例如 9 變成 09)
+            timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // 開始或暫停計時器
+        function toggleTimer() {
+            if (isRunning) {
+                // 暫停邏輯
+                clearInterval(timer);
+                isRunning = false;
+                startBtn.textContent = '繼續';
+                pet.classList.remove('pet-focus');
+                petStatus.textContent = '計時已暫停';
+            } else {
+                // 開始邏輯
+                isRunning = true;
+                startBtn.textContent = '暫停';
+
+                // 根據模式改變寵物狀態
+                if (isFocusMode) {
+                    pet.textContent = '📚'; // 戴眼鏡看書的狀態
+                    pet.classList.add('pet-focus'); // 加入上下浮動動畫
+                    petStatus.textContent = '小怪獸陪你一起專注中！';
+                }
+
+                // 每秒執行一次
+                timer = setInterval(() => {
+                    timeLeft--;
+                    updateDisplay();
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        isRunning = false;
+                        switchMode(); // 時間到，切換模式
+                    }
+                }, 1000);
+            }
+        }
+
+        // 切換 專注/休息 模式
+        function switchMode() {
+            isFocusMode = !isFocusMode; // 反轉狀態
+            
+            if (isFocusMode) {
+                // 切換回專注模式
+                timeLeft = 25 * 60;
+                pet.textContent = '🥚';
+                petStatus.textContent = '準備好進入下一個專注了嗎？';
+                startBtn.textContent = '開始專注';
+            } else {
+                // 切換到休息模式
+                timeLeft = 5 * 60; // 5 分鐘休息
+                pet.textContent = '💤'; // 睡覺狀態
+                pet.classList.remove('pet-focus');
+                petStatus.textContent = '太棒了！讓眼睛休息一下吧。';
+                startBtn.textContent = '開始休息';
+            }
+            updateDisplay();
+        }
+
+        // 重置計時器
+        function resetTimer() {
+            clearInterval(timer);
+            isRunning = false;
+            isFocusMode = true;
+            timeLeft = 25 * 60;
+            updateDisplay();
+            
+            startBtn.textContent = '開始專注';
+            pet.textContent = '🥚';
+            pet.classList.remove('pet-focus');
+            petStatus.textContent = '等待專注中...';
+        }
+
+        // 綁定按鈕事件
+        startBtn.addEventListener('click', toggleTimer);
+        resetBtn.addEventListener('click', resetTimer);
+
+        // 初始化顯示
+        updateDisplay();
+    </script>
+</body>
+</html>
