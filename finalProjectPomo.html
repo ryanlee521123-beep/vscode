@@ -17,16 +17,24 @@
             margin: 0;
         }
 
-        /* 主容器 */
+        /* 新增的外層：負責發光邊框與立體陰影 */
+        .container-wrapper {
+            /* 這裡的 --progress 變數會由 JS 動態更新 */
+            background: conic-gradient(#88c0d0 var(--progress, 0%), transparent 0%);
+            padding: 4px; /* 這就是進度條的粗細 */
+            border-radius: 34px; /* 比內層大一點點，保持圓角和諧 */
+            box-shadow: 15px 15px 30px #1a232c, 
+                    -15px -15px 30px #3c5168;
+            width: 350px;
+        }
+
+        /* 原本的主容器：只負責深色背景與內容排版 */
         .container {
             text-align: center;
             background: #2b3a4a;
-            padding: 50px;
+            padding: 46px; /* 原本是 50px，扣掉外層的 4px padding 以保持總大小不變 */
             border-radius: 30px;
-            /* 新擬態陰影：一個亮面，一個暗面 */
-            box-shadow: 15px 15px 30px #1a232c, 
-                       -15px -15px 30px #3c5168;
-            width: 350px;
+            /* 注意：這裡把原本的 box-shadow 拿掉了，因為移到外層了 */
         }
 
         h1 {
@@ -102,28 +110,29 @@
     </style>
 </head>
 <body>
+    <!-- 新增的外層包裹器，用來產生邊框進度條 -->
+    <div class="container-wrapper" id="progress-wrapper">
+        <div class="container">
+            <h1>🌱 PomoGrowth</h1>
+            
+            <div class="pet-container">
+                <div id="pet">🥚</div> 
+                <p id="pet-status">等待專注中...</p>
+            </div>
 
-    <div class="container">
-        <h1>🌱 PomoGrowth</h1>
-        
-        <div class="pet-container">
-            <!-- 這裡用 Emoji 暫代寵物圖片 -->
-            <div id="pet">🥚</div> 
-            <p id="pet-status">等待專注中...</p>
-        </div>
+            <div id="time-display">25:00</div>
 
-        <div id="time-display">00:10</div>
-
-        <div class="controls">
-            <button id="start-btn">開始專注</button>
-            <button id="reset-btn">重置</button>
+            <div class="controls">
+                <button id="start-btn">開始專注</button>
+                <button id="reset-btn">重置</button>
+            </div>
         </div>
     </div>
 
     <script>
         // 變數設定
         let timer;
-        let timeLeft = 10; // 預設 25 分鐘
+        let timeLeft = 25 * 60; // 預設 25 分鐘
         let isRunning = false;
         let isFocusMode = true; // true = 專注模式, false = 休息模式
 
