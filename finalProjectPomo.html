@@ -193,8 +193,11 @@
 
         // 更新經驗值與進度條畫面
         function updateLevelDisplay() {
-            levelText.textContent = `Pomo-chan's Focus Level: ${level} (${currentXP}/${xpNeededPerLevel} XP)`;
-            const progressPercent = (currentXP / xpNeededPerLevel) * 100;
+            // 取得當前等級到底需要多少 XP
+            const neededXP = getXpNeeded(level); 
+            
+            levelText.textContent = `Pomo-chan's Focus Level: ${level} (${currentXP}/${neededXP} XP)`;
+            const progressPercent = (currentXP / neededXP) * 100;
             xpBar.style.width = `${progressPercent}%`;
         }
 
@@ -202,12 +205,15 @@
         function gainXP(amount) {
             currentXP += amount;
             
-            // 處理升級邏輯
-            while (currentXP >= xpNeededPerLevel) {
-                currentXP -= xpNeededPerLevel;
-                level++;
+            // 處理升級邏輯：只要當前 XP 大於或等於「當前等級需要的 XP」，就觸發升級
+            while (currentXP >= getXpNeeded(level)) {
+                // 先扣除當前等級所需的 XP
+                currentXP -= getXpNeeded(level); 
+                level++; // 等級 +1
                 console.log(`Level Up! 現在是等級 ${level}`);
             }
+            
+            // 更新畫面
             updateLevelDisplay();
         }
 
