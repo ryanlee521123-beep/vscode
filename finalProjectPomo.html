@@ -173,8 +173,13 @@
         // --- 經驗值相關變數 ---
         let level = 1;
         let currentXP = 0;
-        const xpNeededPerLevel = 100; // 每升一級需要的經驗值
         const xpRewardPerSession = 25; // 每次完成「專注」獲得的經驗值
+
+        // 新增：動態計算當前等級所需的經驗值
+        function getXpNeeded(currentLevel) {
+            return 100 + (currentLevel - 1) * 50; 
+            // 指數成長：return Math.floor(100 * Math.pow(1.2, currentLevel - 1)); 
+        }
 
         // 取得 DOM 元素
         const timeDisplay = document.getElementById('time-display');
