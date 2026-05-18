@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Object Properties</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .output-box {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>1. 原始物件的屬性 (Original Properties)</h2>
+    <div class="output-box" id="original-properties"></div>
+
+    <h2>2. 刪除 age 屬性後的物件 (Object after deleting 'age')</h2>
+    <div class="output-box" id="modified-object"></div>
+
+    <script>
+        var Person = {
+            firstName : "Tony",
+            lastName : "Lee",
+            age : 50,
+            eyeColor : "Blue"
+        };
+
+        var propertiesList = Object.keys(Person).join(", ");
+        document.getElementById("original-properties").innerHTML = 
+            "<strong>Properties:</strong> " + propertiesList + "<br><br>" +
+            "<strong>Full Object:</strong> " + JSON.stringify(Person);
+
+        delete Person.age;
+
+        document.getElementById("modified-object").innerHTML = 
+            "<strong>Updated Object:</strong> " + JSON.stringify(Person);
+            
+    </script>
+</body>
+</html>
