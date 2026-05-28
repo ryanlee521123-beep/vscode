@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle Functions Demonstration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .result {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Circle Properties</h2>
+    <div id="output"></div>
+
+    <script>
+        function calcCircumfrence(radius) {
+            // 公式：2 * π * r
+            const circumference = 2 * Math.PI * radius;
+            const message = "The circumference is " + circumference;
+            
+            console.log(message);
+            return message;
+        }
+
+        function calcArea(radius) {
+            const area = Math.PI * radius * radius;
+            const message = "The area is " + area;
+            
+            console.log(message); 
+            return message;
+        }
+
+
+        const testRadius = 5; 
+        const outputDiv = document.getElementById('output');
+
+        outputDiv.innerHTML += '<div class="result"><strong>Radius ' + testRadius + ':</strong><br>' + calcCircumfrence(testRadius) + '</div>';
+        outputDiv.innerHTML += '<div class="result"><strong>Radius ' + testRadius + ':</strong><br>' + calcArea(testRadius) + '</div>';
+        
+    </script>
+</body>
+</html>
