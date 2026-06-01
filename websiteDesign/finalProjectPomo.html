@@ -17,6 +17,25 @@
             --shadow-light: #2b364d;
         }
 
+        /* 🌟 新增：淺色主題變數 */
+        body[data-theme="light"] {
+            --bg-color: #e0e5ec;
+            --panel-bg: #e0e5ec;
+            --text-main: #2d3748;
+            --text-dim: #718096;
+            --accent-cyan: #0284c7; /* 加深藍色以確保在白底上能看清楚 */
+            --accent-green: #059669;
+            --shadow-dark: #a3b1c6;
+            --shadow-light: #ffffff;
+            
+            /* 覆蓋原本的深色漸層背景 */
+            background: var(--bg-color); 
+        }
+
+        body {
+            transition: background-color 0.5s ease, color 0.5s ease; /* 讓切換時有柔和漸變 */
+        }
+        
         body {
             margin: 0;
             padding: 0;
@@ -29,7 +48,6 @@
             overflow: hidden;
         }
 
-        /* 頂部 Logo */
         header {
             padding: 30px 50px;
             display: flex;
@@ -37,9 +55,9 @@
             gap: 15px;
             font-size: 1.5rem;
             font-weight: 700;
+            justify-content: space-between;
         }
 
-        /* 🌟 新增：語言切換下拉選單樣式 */
         #lang-switch {
             background: var(--panel-bg);
             color: var(--text-main);
@@ -55,7 +73,7 @@
         #lang-switch:focus {
             border-color: var(--accent-cyan);
         }
-        /* 主要排版區塊 */
+        
         .main-layout {
             display: flex;
             justify-content: center;
@@ -65,17 +83,13 @@
             padding: 0 50px;
         }
 
-        /* === 左側：角色與等級區塊 === */
         .left-panel {
             display: flex;
             flex-direction: column;
             width: 300px;
         }
 
-        .level-info {
-            margin-bottom: 20px;
-        }
-
+        .level-info { margin-bottom: 20px; }
         .level-text {
             font-size: 0.95rem;
             margin-bottom: 10px;
@@ -90,7 +104,6 @@
             box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5), inset -2px -2px 5px rgba(255,255,255,0.05);
             overflow: hidden;
         }
-
         .xp-bar-fill {
             height: 100%;
             width: 0%; 
@@ -107,7 +120,6 @@
             justify-content: center;
             align-items: center;
         }
-
         .character-img {
             max-width: 100%;
             max-height: 100%;
@@ -120,7 +132,6 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* === 中間：圓形計時器與按鈕 === */
         .center-panel {
             display: flex;
             flex-direction: column;
@@ -128,7 +139,6 @@
             gap: 25px;
         }
 
-        /* 模式切換按鈕 */
         .mode-selector {
             display: flex;
             gap: 15px;
@@ -137,7 +147,6 @@
             border-radius: 20px;
             box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4), inset -3px -3px 6px rgba(255,255,255,0.05);
         }
-
         .mode-btn {
             background: transparent;
             border: none;
@@ -148,7 +157,6 @@
             font-weight: 600;
             transition: all 0.3s;
         }
-
         .mode-btn.active {
             background: var(--panel-bg);
             color: var(--text-main);
@@ -170,9 +178,7 @@
             height: 320px;
             border-radius: 50%;
             background: var(--bg-color);
-            box-shadow: 
-                20px 20px 40px var(--shadow-dark), 
-                -20px -20px 40px var(--shadow-light);
+            box-shadow: 20px 20px 40px var(--shadow-dark), -20px -20px 40px var(--shadow-light);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -186,13 +192,11 @@
             height: 100%;
             transform: rotate(-90deg); 
         }
-
         .progress-ring__circle-bg {
             fill: transparent;
             stroke: rgba(255, 255, 255, 0.05);
             stroke-width: 12;
         }
-
         .progress-ring__circle {
             fill: transparent;
             stroke: var(--accent-cyan);
@@ -204,7 +208,6 @@
             filter: drop-shadow(0 0 8px var(--accent-cyan));
         }
 
-        /* 休息時的顏色樣式 */
         .rest-mode .progress-ring__circle {
             stroke: var(--accent-green);
             filter: drop-shadow(0 0 8px var(--accent-green));
@@ -228,14 +231,12 @@
             gap: 25px;
             margin-top: 10px;
         }
-
         .control-btn-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 12px;
         }
-
         .control-btn {
             width: 60px;
             height: 60px;
@@ -251,12 +252,10 @@
             justify-content: center;
             align-items: center;
         }
-
         .control-btn:active {
             box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
             color: var(--accent-cyan);
         }
-
         .control-label {
             font-size: 0.8rem;
             color: var(--text-dim);
@@ -264,7 +263,6 @@
             text-transform: uppercase;
         }
 
-        /* === 右側：白噪音音樂清單 === */
         .right-panel {
             width: 280px;
             background: var(--panel-bg);
@@ -278,7 +276,6 @@
             flex-direction: column;
             gap: 15px;
         }
-
         .audio-btn {
             display: flex;
             align-items: center;
@@ -294,15 +291,58 @@
             box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px rgba(255,255,255,0.02);
             transition: all 0.3s ease;
         }
-
-        .audio-btn:hover {
-            color: var(--text-main);
+        .audio-btn:hover { color: var(--text-main); }
+        .audio-btn.active {
+            box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan); /* 🌟 改用變數確保淺色下也清楚 */
         }
 
-        .audio-btn.active {
-            box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px rgba(255,255,255,0.02);
+        /* === 播放器控制項樣式 === */
+        .player-controls {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--shadow-light);
+            display: none; /* 預設隱藏，播放時顯示 */
+            flex-direction: column;
+            gap: 15px;
+        }
+        .now-playing-text {
+            font-size: 0.9rem;
             color: var(--accent-cyan);
-            border: 1px solid rgba(139, 233, 253, 0.2);
+            font-weight: bold;
+            text-align: center;
+        }
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .slider-group label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+        /* 自訂滑桿樣式 */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            cursor: pointer;
+            margin-top: -4px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: var(--shadow-dark);
+            border-radius: 2px;
         }
     </style>
 </head>
@@ -313,10 +353,15 @@
             <div style="background: #2b364d; padding: 8px; border-radius: 12px; display: flex;">👾</div>
             <span>PomoGrowth</span>
         </div>
-        <select id="lang-switch" onchange="changeLanguage(this.value)">
-            <option value="zh">繁體中文</option>
-            <option value="en">English</option>
-        </select>
+        
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button id="theme-switch" onclick="toggleTheme()" style="background:transparent; border:none; font-size:1.2rem; cursor:pointer;">☀️</button>
+            
+            <select id="lang-switch" onchange="changeLanguage(this.value)">
+                <option value="zh">繁體中文</option>
+                <option value="en">English</option>
+            </select>
+        </div>
     </header>
 
     <main class="main-layout">
@@ -378,6 +423,20 @@
                     <span class="audio-icon">🌊</span> <span data-i18n="audioOcean">Ocean Waves</span>
                 </button>
             </div>
+
+            <div class="player-controls" id="player-controls">
+                <div class="now-playing-text" id="now-playing-title"></div>
+                
+                <div class="slider-group">
+                    <label data-i18n="musicProgress">進度</label>
+                    <input type="range" id="music-progress" value="0" min="0" max="100" step="0.1">
+                </div>
+                
+                <div class="slider-group">
+                    <label data-i18n="musicVolume">音量</label>
+                    <input type="range" id="volume-control" value="50" min="0" max="100" step="1">
+                </div>
+            </div>
         </section>
 
     </main>
@@ -385,7 +444,6 @@
     <audio id="bg-audio" loop></audio>
 
     <script>
-        // === 🌟 新增：語言系統邏輯 ===
         const i18n = {
             zh: {
                 levelPrefix: "等級",
@@ -395,7 +453,9 @@
                 phaseRest: "☕ 休息時間",
                 audioNature: "大自然聲音",
                 audioLofi: "Lofi 音樂",
-                audioOcean: "海浪白噪音"
+                audioOcean: "海浪白噪音",
+                musicProgress: "進度",
+                musicVolume: "音量"
             },
             en: {
                 levelPrefix: "Focus Level",
@@ -405,37 +465,37 @@
                 phaseRest: "☕ Break Time",
                 audioNature: "Nature Sounds",
                 audioLofi: "Lofi Music",
-                audioOcean: "Ocean Waves"
+                audioOcean: "Ocean Waves",
+                musicProgress: "Progress",
+                musicVolume: "Volume"
             }
         };
-        let currentLang = 'zh'; // 預設語言
+        let currentLang = 'zh';
 
         function changeLanguage(lang) {
             currentLang = lang;
-            
-            // 1. 更新有 data-i18n 標籤的靜態文字
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 el.textContent = i18n[lang][key];
             });
-            
-            // 2. 更新動態文字
             updateXPDisplay();
             phaseText.textContent = isWorkPhase ? i18n[lang].phaseWork : i18n[lang].phaseRest;
+            
+            // 更新播放標題
+            if (currentPlayingBtn) {
+                const trackName = currentPlayingBtn.querySelector('[data-i18n]').textContent;
+                document.getElementById('now-playing-title').textContent = trackName;
+            }
         }
 
-        // === 經驗值系統邏輯 ===
+        // 經驗值系統
         let currentLevel = 1;
         let currentXP = 0;
-        
         const levelText = document.getElementById('level-text');
         const xpBar = document.getElementById('xp-bar');
         
-        function getRequiredXP(level) {
-            return level * 100; // 第一級100，第二級200，呈現線性
-        }
+        function getRequiredXP(level) { return level * 100; }
 
-        // 替換原有的 updateXPDisplay
         function updateXPDisplay() {
             const requiredXP = getRequiredXP(currentLevel);
             levelText.textContent = `${i18n[currentLang].levelPrefix}: ${currentLevel} (${currentXP}/${requiredXP} XP)`;
@@ -446,8 +506,6 @@
         function gainXP(amount) {
             currentXP += amount;
             let requiredXP = getRequiredXP(currentLevel);
-            
-            // 處理升級邏輯 (可能一次加太多連升兩級)
             while (currentXP >= requiredXP) {
                 currentXP -= requiredXP;
                 currentLevel++;
@@ -456,17 +514,15 @@
             updateXPDisplay();
         }
 
-        // === 計時器與模式邏輯 ===
-        let timerMode = '25'; // '25' 或 '50'
-        let isWorkPhase = true; // true: 專注, false: 休息
-        
-        let workDuration = 25 * 60;
-        let restDuration = 5 * 60;
-        let xpReward = 25;
-
+        // 計時器邏輯
+        let timerMode = '25';
+        let isWorkPhase = true; 
+        let workDuration = 5; // 測試時可調小
+        let restDuration = 5;
+        let xpReward = 150;
         let timeLeft = workDuration;
         let timerId = null;
-        let phaseTimeout = null; // 新增：用來處理階段切換的 1 秒延遲
+        let phaseTimeout = null; 
         let isRunning = false;
 
         const timeDisplay = document.getElementById('time-display');
@@ -477,7 +533,6 @@
         const resetBtn = document.getElementById('reset-btn');
         const circle = document.getElementById('progress-circle');
 
-        // SVG 進度圈設定
         const radius = circle.r.baseVal.value;
         const circumference = radius * 2 * Math.PI;
         circle.style.strokeDasharray = `${circumference} ${circumference}`;
@@ -485,11 +540,9 @@
 
         function setProgress(percent) {
             const offset = circumference - (percent / 100) * circumference;
-            
             if (percent === 100) {
                 circle.style.transition = 'none';
                 circle.style.strokeDashoffset = offset;
-                // 強制瀏覽器重繪，確保回到 100% 時是瞬間填滿，不會跟倒數動畫混在一起
                 circle.getBoundingClientRect(); 
             } else {
                 circle.style.transition = 'stroke-dashoffset 1s linear, stroke 0.5s ease';
@@ -510,25 +563,22 @@
             setProgress(percent);
         }
 
-        // 切換模式 (25/5 或 50/10)
         function setMode(mode, btnElement) {
             document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
             btnElement.classList.add('active');
-
             timerMode = mode;
             if (mode === '25') {
-                workDuration = 5; //記得調25 * 60
-                restDuration = 5; //25 * 60
-                xpReward = 25;
+                workDuration = 5;
+                restDuration = 5;
+                xpReward = 150;
             } else {
                 workDuration = 50 * 60;
                 restDuration = 10 * 60;
-                xpReward = 50;
+                xpReward = 500;
             }
             resetTimer();
         }
 
-        // 替換原有的 switchPhase
         function switchPhase() {
             if (isWorkPhase) {
                 gainXP(xpReward);
@@ -545,22 +595,17 @@
             updateTimerDisplay();
         }
 
-        // 核心倒數邏輯 (將原本寫在 start 裡的東西獨立出來)
         function tick() {
-            if (timeLeft <= 0) return; // 防呆保護
-
+            if (timeLeft <= 0) return;
             timeLeft--;
             updateTimerDisplay();
-
             if (timeLeft <= 0) {
                 clearInterval(timerId);
-
-                // 等待 1 秒，讓 00:00 的進度條完整歸零
                 phaseTimeout = setTimeout(() => {
                     if (isRunning) {
-                        isRunning = false; // 關鍵修復：解除執行狀態，讓下個階段可以順利觸發
+                        isRunning = false;
                         switchPhase();
-                        startTimer(); // 自動開始下一階段
+                        startTimer();
                     }
                 }, 1000);
             }
@@ -569,27 +614,18 @@
         function startTimer() {
             if (!isRunning && timeLeft > 0) {
                 isRunning = true;
-                
-                // 關鍵修復：按下的瞬間立刻執行一次 tick，讓數字和進度條馬上開始動！
                 tick(); 
-                
-                // 接著才開始每秒重複
                 timerId = setInterval(tick, 1000);
             }
         }
 
         function pauseTimer() {
             clearInterval(timerId);
-            clearTimeout(phaseTimeout); // 如果在 00:00 的延遲期間按下暫停，也要一併取消
+            clearTimeout(phaseTimeout); 
             isRunning = false;
-
-            // 如果剛好在 00:00 時按下暫停，直接切換階段並保持暫停
-            if (timeLeft <= 0) {
-                switchPhase();
-            }
+            if (timeLeft <= 0) switchPhase();
         }
 
-        // 替換原有的 resetTimer
         function resetTimer() {
             clearInterval(timerId);
             clearTimeout(phaseTimeout);
@@ -605,38 +641,93 @@
         pauseBtn.addEventListener('click', pauseTimer);
         resetBtn.addEventListener('click', resetTimer);
 
-        // 初始化
         updateXPDisplay();
         updateTimerDisplay();
 
-
-        // === 音樂播放邏輯 ===
+        // === 音樂播放與控制邏輯 ===
         const audioPlayer = document.getElementById('bg-audio');
-        let currentPlaying = null;
+        const playerControls = document.getElementById('player-controls');
+        const nowPlayingTitle = document.getElementById('now-playing-title');
+        const musicProgress = document.getElementById('music-progress');
+        const volumeControl = document.getElementById('volume-control');
         
-        // 你的音樂連結
+        let currentPlaying = null;
+        let currentPlayingBtn = null;
+        let isDraggingProgress = false;
+        
         const audioSources = {
             'nature': 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=birds-in-the-forest-12051.mp3',
-            'lofi': 'https://github.com/ryanlee521123-beep/vscode/blob/3659ddd3b4e7ddb228fccb611202ff551c79014b/websiteDesign/music/Woodpecker.mp3',
+            'lofi': 'https://pixabay.com/music/beats-lofi-lofi-music-525021/',
             'ocean': 'https://ryanlee521123-beep.github.io/vscode/websiteDesign/music/Woodpecker.mp3' 
         };
+
+        // 初始化音量
+        audioPlayer.volume = volumeControl.value / 100;
 
         function toggleAudio(type, btnElement) {
             if (currentPlaying === type) {
                 audioPlayer.pause();
                 btnElement.classList.remove('active');
                 currentPlaying = null;
+                currentPlayingBtn = null;
+                playerControls.style.display = 'none';
                 return;
             }
+            
             document.querySelectorAll('.audio-btn').forEach(btn => btn.classList.remove('active'));
             audioPlayer.src = audioSources[type];
             audioPlayer.play();
+            
             btnElement.classList.add('active');
             currentPlaying = type;
+            currentPlayingBtn = btnElement;
+            
+            // 顯示面板並更新標題
+            playerControls.style.display = 'flex';
+            const trackName = btnElement.querySelector('[data-i18n]').textContent;
+            nowPlayingTitle.textContent = trackName;
         }
 
+        // 更新音樂進度條
+        audioPlayer.addEventListener('timeupdate', () => {
+            if (!isDraggingProgress && audioPlayer.duration) {
+                const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                musicProgress.value = percent;
+            }
+        });
+
+        // 拖曳音樂進度條
+        musicProgress.addEventListener('mousedown', () => isDraggingProgress = true);
+        musicProgress.addEventListener('mouseup', () => isDraggingProgress = false);
+        musicProgress.addEventListener('input', (e) => {
+            if (audioPlayer.duration) {
+                const seekTime = (e.target.value / 100) * audioPlayer.duration;
+                audioPlayer.currentTime = seekTime;
+            }
+        });
+
+        // 調整音量
+        volumeControl.addEventListener('input', (e) => {
+            audioPlayer.volume = e.target.value / 100;
+        });
+
         changeLanguage(currentLang);
-        
+
+        // === 🌟 新增：深淺色主題切換邏輯 ===
+        function toggleTheme() {
+            const body = document.body;
+            const themeBtn = document.getElementById('theme-switch');
+            
+            if (body.getAttribute('data-theme') === 'light') {
+                // 切換回深色
+                body.removeAttribute('data-theme');
+                themeBtn.textContent = '☀️';
+            } else {
+                // 切換為淺色
+                body.setAttribute('data-theme', 'light');
+                themeBtn.textContent = '🌙';
+            }
+        }
     </script>
 </body>
 </html>
