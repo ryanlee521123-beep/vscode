@@ -344,6 +344,46 @@
             background: var(--shadow-dark);
             border-radius: 2px;
         }
+
+        /* ================= 🌟 新增：手機版響應式排版 (RWD) ================= */
+        @media (max-width: 950px) {
+            body {
+                height: auto; /* 解除鎖定 100vh，讓畫面可以根據內容無限往下延伸 */
+                min-height: 100vh;
+                overflow-y: auto; /* 允許上下滑動 */
+                padding-bottom: 40px; /* 底部留點呼吸空間 */
+            }
+
+            header {
+                padding: 20px;
+                flex-direction: column; /* 讓 Logo 和按鈕選單在手機上變成上下排列 */
+                gap: 15px;
+            }
+
+            .main-layout {
+                flex-direction: column; /* 🌟 關鍵：讓左(寵物)、中(計時器)、右(音樂) 改成上下堆疊 */
+                padding: 10px 20px;
+                gap: 50px;
+            }
+
+            .left-panel, .right-panel, .center-panel {
+                width: 100%;
+                max-width: 320px; /* 確保內容不會超出一般手機螢幕寬度 */
+                margin: 0 auto; /* 讓區塊在手機畫面上乖乖置中 */
+                box-sizing: border-box; /* 防止 padding 撐破螢幕寬度 */
+            }
+
+            .timer-container {
+                /* 為了適應較小的手機螢幕 (如 iPhone SE)，把計時器等比例稍微縮小 */
+                transform: scale(0.9); 
+                margin-top: -15px;
+                margin-bottom: -15px;
+            }
+            
+            .character-container {
+                height: 250px; /* 手機上寵物區塊可以稍微縮短一點節省空間 */
+            }
+        }
     </style>
 </head>
 <body>
