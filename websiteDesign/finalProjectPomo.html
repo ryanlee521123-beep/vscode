@@ -18,20 +18,49 @@
             color: #e0e0e0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start; /* 🌟 讓內容靠左對齊 */
+            align-items: center; /* 垂直置中 */
             height: 100vh;
             margin: 0;
+            padding-left: 80px; /* 🌟 距離左邊緣留一點空隙 (可自行修改數字) */
+            box-sizing: border-box;
         }
 
-        /* ---  新增：排版容器，讓計時器跟播放器左右並排 --- */
+        /* --- 🌟 替換：排版容器 --- */
         .layout-wrapper {
             display: flex;
-            gap: 50px; /* 兩個區塊的間距 */
-            align-items: center;
+            gap: 50px; 
+            align-items: stretch; /* 🌟 關鍵：讓左右兩邊的框框強制等高 */
         }
 
-        /* 外層：負責發光邊框與立體陰影 (已幫你換回黃色 #ffd700) */
+        /* --- 🌟 替換：主容器 (計時器內部) --- */
+        .container {
+            text-align: center;
+            background: #2b3a4a;
+            padding: 40px 46px; 
+            border-radius: 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 🌟 讓內部內容垂直置中 */
+            height: 100%; /* 🌟 撐滿外框高度 */
+            box-sizing: border-box;
+        }
+
+        /* --- 🌟 替換：音樂播放器樣式 --- */
+        .music-player {
+            background: #2b3a4a;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 15px 15px 30px #1a232c, 
+                       -15px -15px 30px #3c5168;
+            width: 200px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 🌟 讓內部按鈕垂直置中，與左邊對齊 */
+        }
+
+        /* 外層：負責發光邊框與立體陰影  */
         .container-wrapper {
             background: conic-gradient(#ffd700 var(--progress, 0%), transparent 0%);
             padding: 4px; 
@@ -42,13 +71,6 @@
             transition: --progress 1s linear; 
         }
 
-        /* 主容器 */
-        .container {
-            text-align: center;
-            background: #2b3a4a;
-            padding: 40px 46px; 
-            border-radius: 36px;
-        }
 
         h1 {
             margin-top: 0;
@@ -153,16 +175,6 @@
             color: #88c0d0;
         }
 
-        /* --- 🌟 新增：音樂播放器樣式 --- */
-        .music-player {
-            background: #2b3a4a;
-            padding: 30px;
-            border-radius: 30px;
-            box-shadow: 15px 15px 30px #1a232c, 
-                       -15px -15px 30px #3c5168;
-            width: 200px;
-            text-align: center;
-        }
 
         .music-btn {
             background: #2b3a4a;
@@ -265,8 +277,8 @@
         // 換成更穩定的音檔連結
         const audioSources = {
             'lofi': 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3', 
-            'rain': 'https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg', // Google 官方開源雨聲
-            'fire': 'https://actions.google.com/sounds/v1/emergency/fireplace_with_crackling_sounds.ogg' // Google 官方開源柴火聲
+            'rain': 'https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg',
+            'fire': 'https://www.soundjay.com/nature/sounds/fire-1.mp3' // 換成這個穩定的 mp3 連結
         };
 
         // 播放/暫停 切換功能
