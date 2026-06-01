@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PomoGrowth - 專注力電子雞</title>
     <style>
-        /* 🌟 新增：讓 CSS 知道 --progress 是一個可以做動畫的百分比 🌟 */
+        /* 🌟 讓 CSS 知道 --progress 是一個可以做動畫的百分比 */
         @property --progress {
             syntax: '<percentage>';
             inherits: false;
@@ -24,15 +24,21 @@
             margin: 0;
         }
 
-        /* 外層：負責黃色發光邊框與立體陰影 */
+        /* --- 🌟 新增：排版容器，讓計時器跟播放器左右並排 --- */
+        .layout-wrapper {
+            display: flex;
+            gap: 50px; /* 兩個區塊的間距 */
+            align-items: center;
+        }
+
+        /* 外層：負責發光邊框與立體陰影 (已幫你換回黃色 #ffd700) */
         .container-wrapper {
-            background: conic-gradient(#88c0d0 var(--progress, 0%), transparent 0%);
+            background: conic-gradient(#ffd700 var(--progress, 0%), transparent 0%);
             padding: 4px; 
             border-radius: 36px; 
             box-shadow: 15px 15px 30px #1a232c, 
                        -15px -15px 30px #3c5168;
             width: 350px;
-            /* 🌟 關鍵：加上 1 秒的平滑線性動畫 🌟 */
             transition: --progress 1s linear; 
         }
 
@@ -146,36 +152,89 @@
                        inset -8px -8px 16px #3c5168;
             color: #88c0d0;
         }
+
+        /* --- 🌟 新增：音樂播放器樣式 --- */
+        .music-player {
+            background: #2b3a4a;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 15px 15px 30px #1a232c, 
+                       -15px -15px 30px #3c5168;
+            width: 200px;
+            text-align: center;
+        }
+
+        .music-btn {
+            background: #2b3a4a;
+            color: #88c0d0;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            box-shadow: 5px 5px 10px #1a232c, 
+                       -5px -5px 10px #3c5168;
+            transition: all 0.2s ease;
+            width: 100%;
+            font-size: 0.95rem;
+            font-weight: bold;
+            display: block; /* 讓按鈕垂直排列 */
+        }
+
+        .music-btn:active {
+            box-shadow: inset 5px 5px 10px #1a232c, 
+                       inset -5px -5px 10px #3c5168;
+        }
+
+        .stop-btn {
+            color: #e07a5f; 
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container-wrapper" id="progress-wrapper">
-        <div class="container">
-            <h1>🌱 PomoGrowth</h1>
-            
-            <div class="level-container">
-                <div id="level-text">Pomo-chan's Focus Level: 1 (0/100 XP)</div>
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" id="xp-bar"></div>
+    <div class="layout-wrapper">
+        
+        <div class="container-wrapper" id="progress-wrapper">
+            <div class="container">
+                <h1>🌱 PomoGrowth</h1>
+                
+                <div class="level-container">
+                    <div id="level-text">Pomo-chan's Focus Level: 1 (0/100 XP)</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="xp-bar"></div>
+                    </div>
+                </div>
+
+                <div class="pet-container">
+                    <div id="pet">🥚</div> 
+                    <p id="pet-status">等待專注中...</p>
+                </div>
+
+                <div id="time-display">00:10</div>
+
+                <div class="controls">
+                    <button id="start-btn">開始專注</button>
+                    <button id="reset-btn">重置</button>
                 </div>
             </div>
+        </div> 
 
-            <div class="pet-container">
-                <div id="pet">🥚</div> 
-                <p id="pet-status">等待專注中...</p>
-            </div>
-
-            <div id="time-display">00:10</div>
-
-            <div class="controls">
-                <button id="start-btn">開始專注</button>
-                <button id="reset-btn">重置</button>
-            </div>
+        <div class="music-player">
+            <h3 style="color: #a3c2c2; margin-top: 0; margin-bottom: 20px;">🎧 專注白噪音</h3>
+            
+            <audio id="bg-audio" loop></audio>
+            
+            <button class="music-btn" onclick="playAudio('lofi')">☕ Lofi 節拍</button>
+            <button class="music-btn" onclick="playAudio('rain')">🌧️ 窗外雨聲</button>
+            <button class="music-btn" onclick="playAudio('fire')">🔥 柴火燃燒</button>
+            
+            <button class="music-btn stop-btn" onclick="stopAudio()">⏹️ 停止播放</button>
         </div>
-    </div> 
 
-    <script>
+    </div> <script>
         let timer;
         let timeLeft = 10; 
         let isRunning = false;
@@ -198,11 +257,29 @@
         const xpBar = document.getElementById('xp-bar');
         const progressWrapper = document.getElementById('progress-wrapper'); 
 
-        // 🌟修改：讓進度條瞬間回到滿血 (100%)
+        // 🌟 新增：音樂控制邏輯
+        const bgAudio = document.getElementById('bg-audio');
+        const audioSources = {
+            'lofi': 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3', 
+            'rain': 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_8241fc95df.mp3?filename=light-rain-109591.mp3',
+            'fire': 'https://cdn.pixabay.com/download/audio/2022/02/10/audio_fc86259f9a.mp3?filename=crackling-fireplace-nature-sounds-8012.mp3'
+        };
+
+        function playAudio(type) {
+            bgAudio.src = audioSources[type];
+            bgAudio.play();
+        }
+
+        function stopAudio() {
+            bgAudio.pause();
+            bgAudio.currentTime = 0; 
+        }
+        // ------------------------
+
         function resetProgressBarInstantly() {
             if (progressWrapper) {
                 progressWrapper.style.transition = 'none'; 
-                progressWrapper.style.setProperty('--progress', `100%`); // 從 0% 改成 100%
+                progressWrapper.style.setProperty('--progress', `100%`); 
                 
                 setTimeout(() => {
                     progressWrapper.style.transition = '--progress 1s linear';
@@ -241,13 +318,11 @@
                 pet.classList.remove('pet-focus');
                 petStatus.textContent = '計時已暫停';
                 
-                // 暫停時把邊框動畫停住
                 if (progressWrapper) progressWrapper.style.transition = 'none';
             } else {
                 isRunning = true;
                 startBtn.textContent = '暫停';
                 
-                // 恢復時把動畫開回來
                 if (progressWrapper) progressWrapper.style.transition = '--progress 1s linear';
 
                 if (isFocusMode) {
@@ -276,7 +351,6 @@
                             pet.classList.remove('pet-focus');
                             petStatus.textContent = '太棒了！獲得 25 XP，眼睛休息一下吧。';
                         }
-                        // 🌟 切換模式時瞬間歸零進度條 🌟
                         resetProgressBarInstantly(); 
                     } else {
                         timeLeft--;
@@ -284,10 +358,8 @@
 
                     updateDisplay();
 
-                    // 🌟 修改：倒數計時的公式與條件
-                    if (progressWrapper && timeLeft >= 0) { // 把 timeLeft > 0 改成 >= 0 確保最後一秒有執行
+                    if (progressWrapper && timeLeft >= 0) {
                         const totalTime = isFocusMode ? 10 : 5; 
-                        // 公式改成直接用 timeLeft 除以總時間，就會變成倒退縮小
                         const percent = (timeLeft / totalTime) * 100;
                         progressWrapper.style.setProperty('--progress', `${percent}%`);
                     }                  
@@ -302,7 +374,6 @@
             timeLeft = 10;        
             updateDisplay();      
             
-            // 🌟 重置時瞬間歸零進度條 🌟
             resetProgressBarInstantly();
             
             startBtn.textContent = '開始專注'; 
@@ -316,7 +387,7 @@
 
         updateDisplay();
         updateLevelDisplay();
-        // 🌟 新增這行：網頁剛載入時，把進度條設為滿的
+        
         if (progressWrapper) progressWrapper.style.setProperty('--progress', `100%`);
     </script>
 </body>
