@@ -3,104 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PomoGrowth - 專注力電子雞</title>
+    <title>PomoGrowth - 像素風專注力電子雞</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
     <style>
-        /*  讓 CSS 知道 --progress 是一個可以做動畫的百分比 */
+        /* 🌟 定義動畫進度變數 */
         @property --progress {
             syntax: '<percentage>';
             inherits: false;
-            initial-value: 0%;
+            initial-value: 100%;
         }
 
-        /* 基礎重置與背景設定 */
+        /* 🌟 基礎與背景設定：深邃星空藍 */
         body {
-            background-color: #2b3a4a;
+            background-color: #171c26; /* 更深的底色 */
             color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
             display: flex;
-            justify-content: flex-start; /* 🌟 讓內容靠左對齊 */
-            align-items: center; /* 垂直置中 */
+            justify-content: center;
+            align-items: center;
             height: 100vh;
             margin: 0;
-            padding-left: 80px; /* 🌟 距離左邊緣留一點空隙 (可自行修改數字) */
-            box-sizing: border-box;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 85% 15%, #2a3546 0%, transparent 40%); /* 模擬右上角的光暈 */
         }
 
-        /* --- 🌟 替換：排版容器 --- */
-        .layout-wrapper {
+        /* 🌟 主排版：三欄式 Grid */
+        .main-layout {
             display: flex;
-            gap: 50px; 
-            align-items: stretch; /* 🌟 關鍵：讓左右兩邊的框框強制等高 */
+            align-items: center;
+            justify-content: center;
+            gap: 60px; /* 三個區塊的間距 */
         }
 
-        /* --- 🌟 替換：主容器 (計時器內部) --- */
-        .container {
-            text-align: center;
-            background: #2b3a4a;
-            padding: 40px 46px; 
-            border-radius: 36px;
+        /* ================= 左側：等級與寵物 ================= */
+        .left-panel {
             display: flex;
             flex-direction: column;
-            justify-content: center; /* 🌟 讓內部內容垂直置中 */
-            height: 100%; /* 🌟 撐滿外框高度 */
-            box-sizing: border-box;
-        }
-
-        /* --- 🌟 替換：音樂播放器樣式 --- */
-        .music-player {
-            background: #2b3a4a;
-            padding: 30px;
-            border-radius: 30px;
-            box-shadow: 15px 15px 30px #1a232c, 
-                       -15px -15px 30px #3c5168;
-            width: 200px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* 🌟 讓內部按鈕垂直置中，與左邊對齊 */
-        }
-
-        /* 外層：負責發光邊框與立體陰影  */
-        .container-wrapper {
-            background: conic-gradient(#88c0d0 var(--progress, 0%), transparent 0%);
-            padding: 4px; 
-            border-radius: 36px; 
-            box-shadow: 15px 15px 30px #1a232c, 
-                       -15px -15px 30px #3c5168;
-            width: 350px;
-            transition: --progress 1s linear; 
-        }
-
-
-        h1 {
-            margin-top: 0;
-            font-size: 1.5rem;
-            color: #a3c2c2;
-            margin-bottom: 30px;
-        }
-
-        /* 等級與經驗值系統 */
-        .level-container {
-            text-align: left;
-            margin-bottom: 20px;
+            width: 280px;
         }
 
         #level-text {
-            font-size: 0.85rem;
-            color: #88c0d0;
-            margin-bottom: 8px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+            color: #d8dee9;
+            margin-bottom: 10px;
+            font-weight: 800;
         }
 
         .progress-bar-bg {
-            background: #1e2936;
+            background: #0f141d;
             border-radius: 10px;
-            height: 10px;
+            height: 12px;
             width: 100%;
-            box-shadow: inset 3px 3px 6px #151d26, 
-                        inset -3px -3px 6px #273546;
-            overflow: hidden;
+            box-shadow: inset 2px 2px 5px #05070a, inset -2px -2px 5px #1f2736;
+            margin-bottom: 40px;
         }
 
         .progress-bar-fill {
@@ -109,17 +64,17 @@
             width: 0%; 
             border-radius: 10px;
             transition: width 0.5s ease-out; 
-            box-shadow: 0 0 8px rgba(136, 192, 208, 0.6); 
+            box-shadow: 0 0 10px #88c0d0; 
         }
 
-        /* 寵物展示區 */
         .pet-container {
-            margin: 20px 0;
-            min-height: 150px;
+            text-align: center;
+            /* 這裡未來可以放你的像素圖，現在先用 Emoji 代替並加上光暈 */
+            filter: drop-shadow(0 0 20px rgba(136, 192, 208, 0.3));
         }
 
         #pet {
-            font-size: 6rem;
+            font-size: 8rem;
             display: inline-block;
             transition: transform 0.3s ease;
         }
@@ -134,124 +89,210 @@
         }
 
         #pet-status {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #8fa6b8;
-            margin-top: 10px;
+            margin-top: 20px;
+            font-weight: 800;
         }
 
-        /* 計時器顯示 */
+        /* ================= 中間：發光圓環計時器與控制按鈕 ================= */
+        .center-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        /* 發光圓環外層 (負責漸層與邊框) */
+        .timer-ring-wrapper {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            /* 使用藍色漸層，從頂部開始 */
+            background: conic-gradient(#88c0d0 var(--progress, 100%), #1f2736 0%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 25px rgba(136, 192, 208, 0.4), 
+                       -10px -10px 20px rgba(42, 53, 70, 0.5), 
+                       10px 10px 20px rgba(10, 15, 22, 0.5); /* 新擬態外層陰影 */
+            transition: --progress 1s linear; 
+        }
+
+        /* 內層圓形 (負責挖空中心，呈現環狀) */
+        .timer-inner-circle {
+            width: 290px; /* 比外層小，形成 15px 的粗細 */
+            height: 290px;
+            border-radius: 50%;
+            background-color: #171c26; /* 配合背景色 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 8px 8px 15px rgba(10, 15, 22, 0.8), 
+                        inset -8px -8px 15px rgba(42, 53, 70, 0.6); /* 內部凹陷陰影 */
+        }
+
         #time-display {
-            font-size: 4.5rem;
-            font-weight: bold;
-            color: #88c0d0;
-            margin: 20px 0;
-            letter-spacing: 2px;
+            font-family: 'VT323', monospace; /* 像素字體 */
+            font-size: 6.5rem;
+            color: #e5e9f0;
+            text-shadow: 0 0 15px rgba(136, 192, 208, 0.8);
+            letter-spacing: 5px;
         }
 
-        /* 按鈕設計 */
+        /* 控制按鈕區 */
         .controls {
             display: flex;
-            justify-content: space-around;
-            margin-top: 30px;
+            gap: 25px;
         }
 
-        button {
-            background: #2b3a4a;
-            color: #e0e0e0;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 15px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 8px 8px 16px #1a232c, 
-                       -8px -8px 16px #3c5168;
-            transition: all 0.2s ease;
+        .control-btn-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
-        button:active {
-            box-shadow: inset 8px 8px 16px #1a232c, 
-                       inset -8px -8px 16px #3c5168;
+        .icon-btn {
+            background: #1e2634;
             color: #88c0d0;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 6px 6px 12px #0f141d, 
+                       -6px -6px 12px #293447;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
+        .icon-btn:active {
+            box-shadow: inset 4px 4px 8px #0f141d, 
+                       inset -4px -4px 8px #293447;
+            color: #5e81ac;
+        }
+
+        .btn-label {
+            font-size: 0.8rem;
+            color: #8fa6b8;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        /* ================= 右側：音樂播放器 ================= */
+        .right-panel {
+            background: #1b2230;
+            padding: 30px 25px;
+            border-radius: 25px;
+            box-shadow: 10px 10px 20px #0e121a, 
+                       -10px -10px 20px #283246;
+            width: 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
         .music-btn {
-            background: #2b3a4a;
-            color: #88c0d0;
+            background: #1b2230;
+            color: #d8dee9;
             border: none;
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            padding: 15px 20px;
+            border-radius: 15px;
             cursor: pointer;
-            box-shadow: 5px 5px 10px #1a232c, 
-                       -5px -5px 10px #3c5168;
+            box-shadow: 5px 5px 10px #0e121a, 
+                       -5px -5px 10px #283246;
             transition: all 0.2s ease;
-            width: 100%;
             font-size: 0.95rem;
-            font-weight: bold;
-            display: block; /* 讓按鈕垂直排列 */
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 15px; /* 圖示與文字的距離 */
+            text-align: left;
         }
 
-        .music-btn:active {
-            box-shadow: inset 5px 5px 10px #1a232c, 
-                       inset -5px -5px 10px #3c5168;
+        .music-btn:active, .music-btn.playing {
+            box-shadow: inset 4px 4px 8px #0e121a, 
+                       inset -4px -4px 8px #283246;
+            color: #88c0d0;
         }
 
         .stop-btn {
-            color: #e07a5f; 
+            color: #bf616a; 
+            justify-content: center;
             margin-top: 10px;
-            margin-bottom: 0;
         }
     </style>
 </head>
 <body>
 
-    <div class="layout-wrapper">
+    <div class="main-layout">
         
-        <div class="container-wrapper" id="progress-wrapper">
-            <div class="container">
-                <h1>🌱 PomoGrowth</h1>
-                
-                <div class="level-container">
-                    <div id="level-text">Pomo-chan's Focus Level: 1 (0/100 XP)</div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" id="xp-bar"></div>
-                    </div>
-                </div>
-
-                <div class="pet-container">
-                    <div id="pet">🥚</div> 
-                    <p id="pet-status">等待專注中...</p>
-                </div>
-
-                <div id="time-display">00:10</div>
-
-                <div class="controls">
-                    <button id="start-btn">開始專注</button>
-                    <button id="reset-btn">重置</button>
-                </div>
+        <div class="left-panel">
+            <div id="level-text">Pomo-chan's Focus Level: 1 (0/100 XP)</div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="xp-bar"></div>
             </div>
-        </div> 
-
-        <div class="music-player">
-            <h3 style="color: #a3c2c2; margin-top: 0; margin-bottom: 20px;">🎧 專注白噪音</h3>
-            
-            <audio id="bg-audio" loop></audio>
-            
-            <button class="music-btn" onclick="toggleAudio('lofi')">☕ Lofi (播放/暫停)</button>
-            <button class="music-btn" onclick="toggleAudio('rain')">🌧️ 雨聲 (播放/暫停)</button>
-            <button class="music-btn" onclick="toggleAudio('fire')">🔥 柴火 (播放/暫停)</button>
-            
-            <button class="music-btn stop-btn" onclick="stopAudio()">⏹️ 完全停止</button>
+            <div class="pet-container">
+                <div id="pet">🦖</div> 
+                <p id="pet-status">等待專注中...</p>
+            </div>
         </div>
 
-    </div> <script>
+        <div class="center-panel">
+            
+            <div class="timer-ring-wrapper" id="progress-wrapper">
+                <div class="timer-inner-circle">
+                    <div id="time-display">00:10</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control-btn-wrapper">
+                    <button class="icon-btn" id="start-btn">▶</button>
+                    <span class="btn-label">START</span>
+                </div>
+                <div class="control-btn-wrapper">
+                    <button class="icon-btn" id="pause-btn">⏸</button>
+                    <span class="btn-label">PAUSE</span>
+                </div>
+                <div class="control-btn-wrapper">
+                    <button class="icon-btn" id="reset-btn">↺</button>
+                    <span class="btn-label">RESET</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <audio id="bg-audio" loop></audio>
+            
+            <button class="music-btn" onclick="toggleAudio('lofi', this)">
+                <span style="font-size: 1.2rem;">🎧</span> Lofi Music
+            </button>
+            <button class="music-btn" onclick="toggleAudio('rain', this)">
+                <span style="font-size: 1.2rem;">🌧️</span> Rain Sounds
+            </button>
+            <button class="music-btn" onclick="toggleAudio('fire', this)">
+                <span style="font-size: 1.2rem;">🔥</span> Fireplace
+            </button>
+            
+            <button class="music-btn stop-btn" onclick="stopAudio()">⏹️ Stop All</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 計時器變數 ---
         let timer;
-        let timeLeft = 10; 
+        let timeLeft = 10; // 測試用 10 秒
         let isRunning = false;
         let isFocusMode = true; 
 
+        // --- 經驗值變數 ---
         let level = 1;
         let currentXP = 0;
         const xpRewardPerSession = 25; 
@@ -260,8 +301,10 @@
             return 100 + (currentLevel - 1) * 50; 
         }
 
+        // --- 取得 DOM 元素 ---
         const timeDisplay = document.getElementById('time-display');
         const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn'); // 新增暫停按鈕
         const resetBtn = document.getElementById('reset-btn');
         const pet = document.getElementById('pet');
         const petStatus = document.getElementById('pet-status');
@@ -269,54 +312,53 @@
         const xpBar = document.getElementById('xp-bar');
         const progressWrapper = document.getElementById('progress-wrapper'); 
 
-        // --- 🌟 修改：音樂播放控制邏輯 (加入暫停/繼續功能) ---
-
+        // --- 音樂邏輯 ---
         const bgAudio = document.getElementById('bg-audio');
-        let currentTrack = ''; // 新增一個變數，用來記住現在正在播哪首歌
-
-        // 換成更穩定的音檔連結
+        let currentTrack = '';
         const audioSources = {
             'lofi': 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3', 
             'rain': 'https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg',
-            'fire': 'https://www.soundjay.com/nature/sounds/fire-1.mp3' // 換成這個穩定的 mp3 連結
+            'fire': 'https://www.soundjay.com/nature/sounds/fire-1.mp3' 
         };
 
-        // 播放/暫停 切換功能
-        function toggleAudio(type) {
+        function toggleAudio(type, btnElement) {
+            // 清除其他按鈕的發光樣式
+            document.querySelectorAll('.music-btn').forEach(btn => btn.classList.remove('playing'));
+
             if (currentTrack === type) {
-                // 如果點擊的是同一首歌
                 if (bgAudio.paused) {
-                    bgAudio.play(); // 從剛才暫停的地方繼續播
+                    bgAudio.play();
+                    btnElement.classList.add('playing');
                 } else {
-                    bgAudio.pause(); // 暫停
+                    bgAudio.pause();
                 }
             } else {
-                // 如果點擊的是另一首新歌
                 currentTrack = type;
                 bgAudio.src = audioSources[type];
                 bgAudio.play();
+                btnElement.classList.add('playing');
             }
         }
 
-        // 完全停止並歸零
         function stopAudio() {
             bgAudio.pause();
             bgAudio.currentTime = 0; 
-            currentTrack = ''; // 把記憶清空
+            currentTrack = ''; 
+            document.querySelectorAll('.music-btn').forEach(btn => btn.classList.remove('playing'));
         }
-        // ------------------------
 
+        // --- 進度條瞬間歸零防呆 ---
         function resetProgressBarInstantly() {
             if (progressWrapper) {
                 progressWrapper.style.transition = 'none'; 
                 progressWrapper.style.setProperty('--progress', `100%`); 
-                
                 setTimeout(() => {
                     progressWrapper.style.transition = '--progress 1s linear';
                 }, 50);
             }
         }
 
+        // --- UI 更新邏輯 ---
         function updateLevelDisplay() {
             const neededXP = getXpNeeded(level); 
             levelText.textContent = `Pomo-chan's Focus Level: ${level} (${currentXP}/${neededXP} XP)`;
@@ -340,61 +382,61 @@
             timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        function toggleTimer() {
-            if (isRunning) {
-                clearInterval(timer);
-                isRunning = false;
-                startBtn.textContent = '繼續';
-                pet.classList.remove('pet-focus');
-                petStatus.textContent = '計時已暫停';
-                
-                if (progressWrapper) progressWrapper.style.transition = 'none';
-            } else {
-                isRunning = true;
-                startBtn.textContent = '暫停';
-                
-                if (progressWrapper) progressWrapper.style.transition = '--progress 1s linear';
+        // --- 獨立的 START 與 PAUSE 邏輯 ---
+        function startTimer() {
+            if (isRunning) return; // 如果已經在跑，按 start 沒反應
+            isRunning = true;
+            
+            if (progressWrapper) progressWrapper.style.transition = '--progress 1s linear';
 
-                if (isFocusMode) {
-                    pet.textContent = '📚'; 
-                    pet.classList.add('pet-focus'); 
-                    petStatus.textContent = '小怪獸陪你一起專注中！';
+            if (isFocusMode) {
+                pet.textContent = '📚'; 
+                pet.classList.add('pet-focus'); 
+                petStatus.textContent = '小怪獸陪你專注中！';
+            } else {
+                pet.textContent = '💤'; 
+                pet.classList.remove('pet-focus');
+                petStatus.textContent = '休息時間...';
+            }
+
+            timer = setInterval(() => {
+                if (timeLeft <= 0) {
+                    isFocusMode = !isFocusMode; 
+                    
+                    if (isFocusMode) {
+                        timeLeft = 10; 
+                        pet.textContent = '📚';
+                        pet.classList.add('pet-focus');
+                        petStatus.textContent = '休息結束，自動開始專注！';
+                    } else {
+                        gainXP(xpRewardPerSession); 
+                        timeLeft = 5; 
+                        pet.textContent = '💤';
+                        pet.classList.remove('pet-focus');
+                        petStatus.textContent = '太棒了！獲得 25 XP。';
+                    }
+                    resetProgressBarInstantly(); 
                 } else {
-                    pet.textContent = '💤'; 
-                    pet.classList.remove('pet-focus');
-                    petStatus.textContent = '休息中...';
+                    timeLeft--;
                 }
 
-                timer = setInterval(() => {
-                    if (timeLeft <= 0) {
-                        isFocusMode = !isFocusMode; 
-                        
-                        if (isFocusMode) {
-                            timeLeft = 10; 
-                            pet.textContent = '📚';
-                            pet.classList.add('pet-focus');
-                            petStatus.textContent = '休息結束，自動開始專注！';
-                        } else {
-                            gainXP(xpRewardPerSession); 
-                            timeLeft = 5; 
-                            pet.textContent = '💤';
-                            pet.classList.remove('pet-focus');
-                            petStatus.textContent = '太棒了！獲得 25 XP，眼睛休息一下吧。';
-                        }
-                        resetProgressBarInstantly(); 
-                    } else {
-                        timeLeft--;
-                    }
+                updateDisplay();
 
-                    updateDisplay();
+                if (progressWrapper && timeLeft >= 0) {
+                    const totalTime = isFocusMode ? 10 : 5; 
+                    const percent = (timeLeft / totalTime) * 100;
+                    progressWrapper.style.setProperty('--progress', `${percent}%`);
+                }                  
+            }, 1000);
+        }
 
-                    if (progressWrapper && timeLeft >= 0) {
-                        const totalTime = isFocusMode ? 10 : 5; 
-                        const percent = (timeLeft / totalTime) * 100;
-                        progressWrapper.style.setProperty('--progress', `${percent}%`);
-                    }                  
-                }, 1000);
-            }
+        function pauseTimer() {
+            if (!isRunning) return; // 如果已經暫停，按 pause 沒反應
+            clearInterval(timer);
+            isRunning = false;
+            pet.classList.remove('pet-focus');
+            petStatus.textContent = '計時已暫停';
+            if (progressWrapper) progressWrapper.style.transition = 'none';
         }
 
         function resetTimer() {
@@ -406,18 +448,19 @@
             
             resetProgressBarInstantly();
             
-            startBtn.textContent = '開始專注'; 
-            pet.textContent = '🥚';
+            pet.textContent = '🦖';
             pet.classList.remove('pet-focus');
             petStatus.textContent = '等待專注中...';
         }
 
-        startBtn.addEventListener('click', toggleTimer);
+        // --- 綁定按鈕事件 ---
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
         resetBtn.addEventListener('click', resetTimer);
 
+        // --- 初始化 ---
         updateDisplay();
         updateLevelDisplay();
-        
         if (progressWrapper) progressWrapper.style.setProperty('--progress', `100%`);
     </script>
 </body>
