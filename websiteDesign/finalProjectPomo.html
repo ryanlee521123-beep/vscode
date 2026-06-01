@@ -331,7 +331,7 @@
         // --- 經驗值變數 ---
         let level = 1;
         let currentXP = 0;
-        const xpRewardPerSession = 25; 
+        let currentXpReward = 150; // 預設 25 分鐘模式給予 150 XP
 
         function getXpNeeded(currentLevel) {
             return 100 + (currentLevel - 1) * 50; 
@@ -452,9 +452,16 @@
                         petStatus.textContent = '太棒了！獲得 25 XP。';
                     }
                     resetProgressBarInstantly(); 
-                } else {
-                    timeLeft--;
-                }
+                // ... 前面是 if (isFocusMode) { ... }
+                    } else {
+                        // 🌟 修改：給予動態設定的經驗值
+                        gainXP(currentXpReward); 
+                        timeLeft = breakTimeSetting; 
+                        pet.textContent = '💤';
+                        pet.classList.remove('pet-focus');
+                        // 🌟 修改：讓畫面上的提示文字顯示正確的數字
+                        petStatus.textContent = `太棒了！獲得 ${currentXpReward} XP。`;
+                    }
 
                 updateDisplay();
 
@@ -503,20 +510,27 @@
         const mode25Btn = document.getElementById('mode-25');
         const mode50Btn = document.getElementById('mode-50');
 
-        // --- 🌟 新增：切換模式邏輯 ---
+        // --- 🌟 替換：切換模式邏輯 ---
         function setMode(focusMin, breakMin, activeBtn, inactiveBtn) {
-            // 如果計時器正在跑，不允許切換模式（防呆）
+            // 如果計時器正在跑，不允許切換模式
             if (isRunning) return; 
             
             // 設定新的時間 (分鐘轉秒數)
             focusTimeSetting = focusMin * 60; 
             breakTimeSetting = breakMin * 60;
             
-            // 更改按鈕外觀：點擊的亮起，另一個暗掉
+            // 🌟 新增：根據選擇的分鐘數設定對應的經驗值
+            if (focusMin === 25) {
+                currentXpReward = 150;
+            } else if (focusMin === 50) {
+                currentXpReward = 400;
+            }
+            
+            // 更改按鈕外觀
             activeBtn.classList.add('active');
             inactiveBtn.classList.remove('active');
             
-            // 重置計時器，讓畫面顯示新模式的時間
+            // 重置計時器
             resetTimer(); 
         }
 
