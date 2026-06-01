@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PomoGrowth - 專注力電子雞</title>
     <style>
-        /* 🌟 讓 CSS 知道 --progress 是一個可以做動畫的百分比 */
+        /*  讓 CSS 知道 --progress 是一個可以做動畫的百分比 */
         @property --progress {
             syntax: '<percentage>';
             inherits: false;
@@ -24,7 +24,7 @@
             margin: 0;
         }
 
-        /* --- 🌟 新增：排版容器，讓計時器跟播放器左右並排 --- */
+        /* ---  新增：排版容器，讓計時器跟播放器左右並排 --- */
         .layout-wrapper {
             display: flex;
             gap: 50px; /* 兩個區塊的間距 */
@@ -227,11 +227,11 @@
             
             <audio id="bg-audio" loop></audio>
             
-            <button class="music-btn" onclick="playAudio('lofi')">☕ Lofi 節拍</button>
-            <button class="music-btn" onclick="playAudio('rain')">🌧️ 窗外雨聲</button>
-            <button class="music-btn" onclick="playAudio('fire')">🔥 柴火燃燒</button>
+            <button class="music-btn" onclick="toggleAudio('lofi')">☕ Lofi (播放/暫停)</button>
+            <button class="music-btn" onclick="toggleAudio('rain')">🌧️ 雨聲 (播放/暫停)</button>
+            <button class="music-btn" onclick="toggleAudio('fire')">🔥 柴火 (播放/暫停)</button>
             
-            <button class="music-btn stop-btn" onclick="stopAudio()">⏹️ 停止播放</button>
+            <button class="music-btn stop-btn" onclick="stopAudio()">⏹️ 完全停止</button>
         </div>
 
     </div> <script>
@@ -257,22 +257,40 @@
         const xpBar = document.getElementById('xp-bar');
         const progressWrapper = document.getElementById('progress-wrapper'); 
 
-        // 🌟 新增：音樂控制邏輯
+        // --- 🌟 修改：音樂播放控制邏輯 (加入暫停/繼續功能) ---
+
         const bgAudio = document.getElementById('bg-audio');
+        let currentTrack = ''; // 新增一個變數，用來記住現在正在播哪首歌
+
+        // 換成更穩定的音檔連結
         const audioSources = {
             'lofi': 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3', 
-            'rain': 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_8241fc95df.mp3?filename=light-rain-109591.mp3',
-            'fire': 'https://cdn.pixabay.com/download/audio/2022/02/10/audio_fc86259f9a.mp3?filename=crackling-fireplace-nature-sounds-8012.mp3'
+            'rain': 'https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg', // Google 官方開源雨聲
+            'fire': 'https://actions.google.com/sounds/v1/emergency/fireplace_with_crackling_sounds.ogg' // Google 官方開源柴火聲
         };
 
-        function playAudio(type) {
-            bgAudio.src = audioSources[type];
-            bgAudio.play();
+        // 播放/暫停 切換功能
+        function toggleAudio(type) {
+            if (currentTrack === type) {
+                // 如果點擊的是同一首歌
+                if (bgAudio.paused) {
+                    bgAudio.play(); // 從剛才暫停的地方繼續播
+                } else {
+                    bgAudio.pause(); // 暫停
+                }
+            } else {
+                // 如果點擊的是另一首新歌
+                currentTrack = type;
+                bgAudio.src = audioSources[type];
+                bgAudio.play();
+            }
         }
 
+        // 完全停止並歸零
         function stopAudio() {
             bgAudio.pause();
             bgAudio.currentTime = 0; 
+            currentTrack = ''; // 把記憶清空
         }
         // ------------------------
 
