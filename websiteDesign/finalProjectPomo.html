@@ -3,540 +3,574 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PomoGrowth - 像素風專注力電子雞</title>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+    <title>PomoGrowth - 番茄鐘電子雞</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=VT323&display=swap" rel="stylesheet">
     <style>
-        /* 🌟 定義動畫進度變數 */
-        @property --progress {
-            syntax: '<percentage>';
-            inherits: false;
-            initial-value: 100%;
+        :root {
+            --bg-color: #1e2638;
+            --panel-bg: #232c3f;
+            --text-main: #e2e8f0;
+            --text-dim: #94a3b8;
+            --accent-cyan: #8be9fd;
+            --accent-green: #50fa7b;
+            --shadow-dark: #151a27;
+            --shadow-light: #2b364d;
         }
 
-        /* 🌟 基礎與背景設定：深邃星空藍 */
         body {
-            background-color: #171c26; /* 更深的底色 */
-            color: #e0e0e0;
-            font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+            background: radial-gradient(circle at top right, #33415c 0%, var(--bg-color) 40%, #151b29 100%);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
-            background-image: radial-gradient(circle at 85% 15%, #2a3546 0%, transparent 40%); /* 模擬右上角的光暈 */
         }
 
-        /* 🌟 主排版：三欄式 Grid */
+        /* 頂部 Logo */
+        header {
+            padding: 30px 50px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* 主要排版區塊 */
         .main-layout {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 60px; /* 三個區塊的間距 */
+            align-items: center;
+            gap: 60px;
+            flex-grow: 1;
+            padding: 0 50px;
         }
 
-        /* ================= 左側：等級與寵物 ================= */
+        /* === 左側：角色與等級區塊 === */
         .left-panel {
             display: flex;
             flex-direction: column;
-            width: 280px;
+            width: 300px;
         }
 
-        #level-text {
-            font-size: 0.9rem;
-            color: #d8dee9;
+        .level-info {
+            margin-bottom: 20px;
+        }
+
+        .level-text {
+            font-size: 0.95rem;
             margin-bottom: 10px;
-            font-weight: 800;
+            letter-spacing: 0.5px;
+            font-weight: bold;
         }
 
-        .progress-bar-bg {
-            background: #0f141d;
-            border-radius: 10px;
+        .xp-bar-bg {
+            background-color: var(--shadow-dark);
             height: 12px;
-            width: 100%;
-            box-shadow: inset 2px 2px 5px #05070a, inset -2px -2px 5px #1f2736;
-            margin-bottom: 40px;
+            border-radius: 10px;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5), inset -2px -2px 5px rgba(255,255,255,0.05);
+            overflow: hidden;
         }
 
-        .progress-bar-fill {
-            background: #88c0d0;
+        .xp-bar-fill {
             height: 100%;
             width: 0%; 
+            background-color: var(--accent-cyan);
             border-radius: 10px;
-            transition: width 0.5s ease-out; 
-            box-shadow: 0 0 10px #88c0d0; 
+            box-shadow: 0 0 10px var(--accent-cyan);
+            transition: width 0.5s ease;
         }
 
-        .pet-container {
-            text-align: center;
-            /* 這裡未來可以放你的像素圖，現在先用 Emoji 代替並加上光暈 */
-            filter: drop-shadow(0 0 20px rgba(136, 192, 208, 0.3));
+        .character-container {
+            width: 100%;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        #pet {
-            font-size: 8rem;
-            display: inline-block;
-            transition: transform 0.3s ease;
-        }
-
-        .pet-focus {
-            animation: float 2s infinite ease-in-out;
+        .character-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            animation: float 3s ease-in-out infinite;
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-10px); }
         }
 
-        #pet-status {
-            font-size: 1rem;
-            color: #8fa6b8;
-            margin-top: 20px;
-            font-weight: 800;
-        }
-
-        /* ================= 新增：模式切換器樣式 ================= */
-        .mode-selector {
-            display: flex;
-            gap: 15px;
-            margin-bottom: -15px; /* 拉近與下方圓環計時器的距離 */
-        }
-
-        .mode-btn {
-            background: #1b2230;
-            color: #8fa6b8;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 4px 4px 8px #0e121a, 
-                       -4px -4px 8px #283246;
-            transition: all 0.2s ease;
-        }
-
-        /* 被選中時的凹陷發光狀態 */
-        .mode-btn.active {
-            box-shadow: inset 3px 3px 6px #0e121a, 
-                       inset -3px -3px 6px #283246;
-            color: #88c0d0;
-        }
-
-        /* ================= 中間：發光圓環計時器與控制按鈕 ================= */
+        /* === 中間：圓形計時器與按鈕 === */
         .center-panel {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 40px;
+            gap: 25px;
         }
 
-        /* 發光圓環外層 (負責漸層與邊框) */
-        .timer-ring-wrapper {
+        /* 模式切換按鈕 */
+        .mode-selector {
+            display: flex;
+            gap: 15px;
+            background: var(--shadow-dark);
+            padding: 8px;
+            border-radius: 20px;
+            box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4), inset -3px -3px 6px rgba(255,255,255,0.05);
+        }
+
+        .mode-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            padding: 10px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .mode-btn.active {
+            background: var(--panel-bg);
+            color: var(--text-main);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .phase-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-cyan);
+            letter-spacing: 2px;
+            margin: 0;
+            transition: color 0.3s ease;
+        }
+
+        .timer-container {
             position: relative;
             width: 320px;
             height: 320px;
             border-radius: 50%;
-            /* 使用藍色漸層，從頂部開始 */
-            background: conic-gradient(#88c0d0 var(--progress, 100%), #1f2736 0%);
+            background: var(--bg-color);
+            box-shadow: 
+                20px 20px 40px var(--shadow-dark), 
+                -20px -20px 40px var(--shadow-light);
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 25px rgba(136, 192, 208, 0.4), 
-                       -10px -10px 20px rgba(42, 53, 70, 0.5), 
-                       10px 10px 20px rgba(10, 15, 22, 0.5); /* 新擬態外層陰影 */
-            transition: --progress 1s linear; 
         }
 
-        /* 內層圓形 (負責挖空中心，呈現環狀) */
-        .timer-inner-circle {
-            width: 290px; /* 比外層小，形成 15px 的粗細 */
-            height: 290px;
-            border-radius: 50%;
-            background-color: #171c26; /* 配合背景色 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: inset 8px 8px 15px rgba(10, 15, 22, 0.8), 
-                        inset -8px -8px 15px rgba(42, 53, 70, 0.6); /* 內部凹陷陰影 */
+        .progress-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg); 
         }
 
-        #time-display {
-            font-family: 'VT323', monospace; /* 像素字體 */
-            font-size: 6.5rem;
-            color: #e5e9f0;
-            text-shadow: 0 0 15px rgba(136, 192, 208, 0.8);
-            letter-spacing: 5px;
+        .progress-ring__circle-bg {
+            fill: transparent;
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 12;
         }
 
-        /* 控制按鈕區 */
+        .progress-ring__circle {
+            fill: transparent;
+            stroke: var(--accent-cyan);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 942; 
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear, stroke 0.5s ease;
+            filter: drop-shadow(0 0 8px var(--accent-cyan));
+        }
+
+        /* 休息時的顏色樣式 */
+        .rest-mode .progress-ring__circle {
+            stroke: var(--accent-green);
+            filter: drop-shadow(0 0 8px var(--accent-green));
+        }
+        .rest-mode .time-display, .rest-mode .phase-text {
+            color: var(--accent-green);
+            text-shadow: 0 0 15px rgba(80, 250, 123, 0.5);
+        }
+
+        .time-display {
+            font-family: 'VT323', monospace;
+            font-size: 6rem;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 15px rgba(139, 233, 253, 0.5);
+            z-index: 2;
+            transition: color 0.5s ease;
+        }
+
         .controls {
             display: flex;
             gap: 25px;
+            margin-top: 10px;
         }
 
         .control-btn-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .icon-btn {
-            background: #1e2634;
-            color: #88c0d0;
-            border: none;
+        .control-btn {
             width: 60px;
             height: 60px;
-            border-radius: 18px;
+            border-radius: 16px;
+            background: var(--panel-bg);
+            border: none;
+            color: var(--text-main);
             font-size: 1.5rem;
             cursor: pointer;
-            box-shadow: 6px 6px 12px #0f141d, 
-                       -6px -6px 12px #293447;
+            box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
             transition: all 0.2s ease;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .icon-btn:active {
-            box-shadow: inset 4px 4px 8px #0f141d, 
-                       inset -4px -4px 8px #293447;
-            color: #5e81ac;
+        .control-btn:active {
+            box-shadow: inset 6px 6px 12px var(--shadow-dark), inset -6px -6px 12px var(--shadow-light);
+            color: var(--accent-cyan);
         }
 
-        .btn-label {
+        .control-label {
             font-size: 0.8rem;
-            color: #8fa6b8;
-            font-weight: 800;
+            color: var(--text-dim);
             letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        /* ================= 右側：音樂播放器 ================= */
+        /* === 右側：白噪音音樂清單 === */
         .right-panel {
-            background: #1b2230;
-            padding: 30px 25px;
-            border-radius: 25px;
-            box-shadow: 10px 10px 20px #0e121a, 
-                       -10px -10px 20px #283246;
-            width: 220px;
+            width: 280px;
+            background: var(--panel-bg);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 15px 15px 30px var(--shadow-dark), -15px -15px 30px var(--shadow-light);
+        }
+
+        .audio-list {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
 
-        .music-btn {
-            background: #1b2230;
-            color: #d8dee9;
-            border: none;
-            padding: 15px 20px;
-            border-radius: 15px;
-            cursor: pointer;
-            box-shadow: 5px 5px 10px #0e121a, 
-                       -5px -5px 10px #283246;
-            transition: all 0.2s ease;
-            font-size: 0.95rem;
-            font-weight: 800;
+        .audio-btn {
             display: flex;
             align-items: center;
-            gap: 15px; /* 圖示與文字的距離 */
-            text-align: left;
+            gap: 15px;
+            background: var(--bg-color);
+            border: none;
+            color: var(--text-dim);
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Nunito', sans-serif;
+            cursor: pointer;
+            box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px rgba(255,255,255,0.02);
+            transition: all 0.3s ease;
         }
 
-        .music-btn:active, .music-btn.playing {
-            box-shadow: inset 4px 4px 8px #0e121a, 
-                       inset -4px -4px 8px #283246;
-            color: #88c0d0;
+        .audio-btn:hover {
+            color: var(--text-main);
         }
 
-        .stop-btn {
-            color: #bf616a; 
-            justify-content: center;
-            margin-top: 10px;
+        .audio-btn.active {
+            box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px rgba(255,255,255,0.02);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(139, 233, 253, 0.2);
         }
     </style>
 </head>
 <body>
 
-    <div class="main-layout">
+    <header>
+        <div style="background: #2b364d; padding: 8px; border-radius: 12px; display: flex;">👾</div>
+        <span>PomoGrowth</span>
+    </header>
+
+    <main class="main-layout">
         
-        <div class="left-panel">
-            <div id="level-text">Pomo-chan's Focus Level: 1 (0/100 XP)</div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="xp-bar"></div>
-            </div>
-            <div class="pet-container">
-                <div id="pet">🦖</div> 
-                <p id="pet-status">等待專注中...</p>
-            </div>
-        </div>
-
-        <div class="center-panel">
-            <!-- 模式切換按鈕 (放在發光圓環的正上方) -->
-            <div class="mode-selector">
-                <button class="mode-btn active" id="mode-25">25 / 5</button>
-                <button class="mode-btn" id="mode-50">50 / 10</button>
-            </div>
-
-            <div class="timer-ring-wrapper" id="progress-wrapper">
-                <div class="timer-inner-circle">
-                    <div id="time-display">00:10</div>
+        <section class="left-panel">
+            <div class="level-info">
+                <div class="level-text" id="level-text">Level: 1 (0/100 XP)</div>
+                <div class="xp-bar-bg">
+                    <div class="xp-bar-fill" id="xp-bar"></div>
                 </div>
+            </div>
+            
+            <div class="character-container">
+                <img class="character-img" id="pet-image" src="https://cdn-icons-png.flaticon.com/512/826/826963.png" alt="My Pet">
+            </div>
+        </section>
+
+        <section class="center-panel" id="center-panel">
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="25" onclick="setMode('25', this)">25 / 5 分鐘</button>
+                <button class="mode-btn" data-mode="50" onclick="setMode('50', this)">50 / 10 分鐘</button>
+            </div>
+
+            <p class="phase-text" id="phase-text">🧠 專注時間</p>
+
+            <div class="timer-container">
+                <svg class="progress-ring" width="320" height="320">
+                    <circle class="progress-ring__circle-bg" r="150" cx="160" cy="160"></circle>
+                    <circle class="progress-ring__circle" r="150" cx="160" cy="160" id="progress-circle"></circle>
+                </svg>
+                <div class="time-display" id="time-display">25:00</div>
             </div>
 
             <div class="controls">
                 <div class="control-btn-wrapper">
-                    <button class="icon-btn" id="start-btn">▶</button>
-                    <span class="btn-label">START</span>
+                    <button class="control-btn" id="start-btn">▶</button>
+                    <span class="control-label">START</span>
                 </div>
                 <div class="control-btn-wrapper">
-                    <button class="icon-btn" id="pause-btn">⏸</button>
-                    <span class="btn-label">PAUSE</span>
+                    <button class="control-btn" id="pause-btn">⏸</button>
+                    <span class="control-label">PAUSE</span>
                 </div>
                 <div class="control-btn-wrapper">
-                    <button class="icon-btn" id="reset-btn">↺</button>
-                    <span class="btn-label">RESET</span>
+                    <button class="control-btn" id="reset-btn">↺</button>
+                    <span class="control-label">RESET</span>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="right-panel">
-            <audio id="bg-audio" loop></audio>
-            
-            <button class="music-btn" onclick="toggleAudio('lofi', this)">
-                <span style="font-size: 1.2rem;">🎧</span> Lofi Music
-            </button>
-            <button class="music-btn" onclick="toggleAudio('rain', this)">
-                <span style="font-size: 1.2rem;">🌧️</span> Rain Sounds
-            </button>
-            <button class="music-btn" onclick="toggleAudio('fire', this)">
-                <span style="font-size: 1.2rem;">🔥</span> Fireplace
-            </button>
-            
-            <button class="music-btn stop-btn" onclick="stopAudio()">⏹️ Stop All</button>
-        </div>
+        <section class="right-panel">
+            <div class="audio-list">
+                <button class="audio-btn" onclick="toggleAudio('nature', this)">
+                    <span class="audio-icon">🌲</span> Nature Sounds
+                </button>
+                <button class="audio-btn" onclick="toggleAudio('lofi', this)">
+                    <span class="audio-icon">🎧</span> Lofi Music
+                </button>
+                <button class="audio-btn" onclick="toggleAudio('ocean', this)">
+                    <span class="audio-icon">🌊</span> Ocean Waves
+                </button>
+            </div>
+        </section>
 
-    </div>
+    </main>
+
+    <audio id="bg-audio" loop></audio>
 
     <script>
-        // --- 🌟 替換：計時器變數 ---
-        let timer;
-        // 注意：這裡已經幫你改成「真實的分鐘數」(* 60)，如果你還要測試可以先把 * 60 拿掉
-        let focusTimeSetting = 25 * 60; 
-        let breakTimeSetting = 5 * 60;  
-        let timeLeft = focusTimeSetting; 
-        let isRunning = false;
-        let isFocusMode = true;
-
-        // --- 經驗值變數 ---
-        let level = 1;
+        // === 經驗值系統邏輯 ===
+        let currentLevel = 1;
         let currentXP = 0;
-        let currentXpReward = 150; // 預設 25 分鐘模式給予 150 XP
-
-        function getXpNeeded(currentLevel) {
-            return 100 + (currentLevel - 1) * 50; 
-        }
-
-        // --- 取得 DOM 元素 ---
-        const timeDisplay = document.getElementById('time-display');
-        const startBtn = document.getElementById('start-btn');
-        const pauseBtn = document.getElementById('pause-btn'); // 新增暫停按鈕
-        const resetBtn = document.getElementById('reset-btn');
-        const pet = document.getElementById('pet');
-        const petStatus = document.getElementById('pet-status');
+        
         const levelText = document.getElementById('level-text');
         const xpBar = document.getElementById('xp-bar');
-        const progressWrapper = document.getElementById('progress-wrapper'); 
-
-        // --- 音樂邏輯 ---
-        const bgAudio = document.getElementById('bg-audio');
-        let currentTrack = '';
-        const audioSources = {
-            'lofi': 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3', 
-            'rain': 'https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg',
-            'fire': 'https://www.soundjay.com/nature/sounds/fire-1.mp3' 
-        };
-
-        function toggleAudio(type, btnElement) {
-            // 清除其他按鈕的發光樣式
-            document.querySelectorAll('.music-btn').forEach(btn => btn.classList.remove('playing'));
-
-            if (currentTrack === type) {
-                if (bgAudio.paused) {
-                    bgAudio.play();
-                    btnElement.classList.add('playing');
-                } else {
-                    bgAudio.pause();
-                }
-            } else {
-                currentTrack = type;
-                bgAudio.src = audioSources[type];
-                bgAudio.play();
-                btnElement.classList.add('playing');
-            }
+        
+        function getRequiredXP(level) {
+            return level * 100; // 第一級100，第二級200，呈現線性
         }
 
-        function stopAudio() {
-            bgAudio.pause();
-            bgAudio.currentTime = 0; 
-            currentTrack = ''; 
-            document.querySelectorAll('.music-btn').forEach(btn => btn.classList.remove('playing'));
-        }
-
-        // --- 進度條瞬間歸零防呆 ---
-        function resetProgressBarInstantly() {
-            if (progressWrapper) {
-                progressWrapper.style.transition = 'none'; 
-                progressWrapper.style.setProperty('--progress', `100%`); 
-                setTimeout(() => {
-                    progressWrapper.style.transition = '--progress 1s linear';
-                }, 50);
-            }
-        }
-
-        // --- UI 更新邏輯 ---
-        function updateLevelDisplay() {
-            const neededXP = getXpNeeded(level); 
-            levelText.textContent = `Pomo-chan's Focus Level: ${level} (${currentXP}/${neededXP} XP)`;
-            const progressPercent = (currentXP / neededXP) * 100;
-            xpBar.style.width = `${progressPercent}%`;
+        function updateXPDisplay() {
+            const requiredXP = getRequiredXP(currentLevel);
+            levelText.textContent = `Focus Level: ${currentLevel} (${currentXP}/${requiredXP} XP)`;
+            const percent = (currentXP / requiredXP) * 100;
+            xpBar.style.width = `${percent}%`;
         }
 
         function gainXP(amount) {
             currentXP += amount;
-            while (currentXP >= getXpNeeded(level)) {
-                currentXP -= getXpNeeded(level); 
-                level++; 
-            }
-            updateLevelDisplay();
-        }
-
-        function updateDisplay() {
-            const safeTime = Math.max(0, timeLeft);
-            const minutes = Math.floor(safeTime / 60);
-            const seconds = safeTime % 60;
-            timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        // --- 獨立的 START 與 PAUSE 邏輯 ---
-        function startTimer() {
-            if (isRunning) return; // 如果已經在跑，按 start 沒反應
-            isRunning = true;
+            let requiredXP = getRequiredXP(currentLevel);
             
-            if (progressWrapper) progressWrapper.style.transition = '--progress 1s linear';
-
-            if (isFocusMode) {
-                pet.textContent = '📚'; 
-                pet.classList.add('pet-focus'); 
-                petStatus.textContent = '小怪獸陪你專注中！';
-            } else {
-                pet.textContent = '💤'; 
-                pet.classList.remove('pet-focus');
-                petStatus.textContent = '休息時間...';
+            // 處理升級邏輯 (可能一次加太多連升兩級)
+            while (currentXP >= requiredXP) {
+                currentXP -= requiredXP;
+                currentLevel++;
+                requiredXP = getRequiredXP(currentLevel);
             }
+            updateXPDisplay();
+        }
 
-            timer = setInterval(() => {
-                if (timeLeft <= 0) {
-                    isFocusMode = !isFocusMode; 
-                    
-                    if (isFocusMode) {
-                        timeLeft = focusTimeSetting; 
-                        pet.textContent = '📚';
-                        pet.classList.add('pet-focus');
-                        petStatus.textContent = '休息結束，自動開始專注！';
-                    } else {
-                        gainXP(xpRewardPerSession); 
-                        timeLeft = breakTimeSetting; 
-                        pet.textContent = '💤';
-                        pet.classList.remove('pet-focus');
-                        petStatus.textContent = '太棒了！獲得 25 XP。';
+        // === 計時器與模式邏輯 ===
+        let timerMode = '25'; // '25' 或 '50'
+        let isWorkPhase = true; // true: 專注, false: 休息
+        
+        let workDuration = 25 * 60;
+        let restDuration = 5 * 60;
+        let xpReward = 25;
+
+        let timeLeft = workDuration;
+        let timerId = null;
+        let phaseTimeout = null; // 新增：用來處理階段切換的 1 秒延遲
+        let isRunning = false;
+
+        const timeDisplay = document.getElementById('time-display');
+        const phaseText = document.getElementById('phase-text');
+        const centerPanel = document.getElementById('center-panel');
+        const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const circle = document.getElementById('progress-circle');
+
+        // SVG 進度圈設定
+        const radius = circle.r.baseVal.value;
+        const circumference = radius * 2 * Math.PI;
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference;
+
+        function setProgress(percent) {
+            const offset = circumference - (percent / 100) * circumference;
+            
+            if (percent === 100) {
+                circle.style.transition = 'none';
+                circle.style.strokeDashoffset = offset;
+                // 強制瀏覽器重繪，確保回到 100% 時是瞬間填滿，不會跟倒數動畫混在一起
+                circle.getBoundingClientRect(); 
+            } else {
+                circle.style.transition = 'stroke-dashoffset 1s linear, stroke 0.5s ease';
+                circle.style.strokeDashoffset = offset;
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerDisplay() {
+            timeDisplay.textContent = formatTime(timeLeft);
+            const totalDuration = isWorkPhase ? workDuration : restDuration;
+            const percent = (timeLeft / totalDuration) * 100;
+            setProgress(percent);
+        }
+
+        // 切換模式 (25/5 或 50/10)
+        function setMode(mode, btnElement) {
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            timerMode = mode;
+            if (mode === '25') {
+                workDuration = 5; //記得調25 * 60
+                restDuration = 5; //25 * 60
+                xpReward = 25;
+            } else {
+                workDuration = 50 * 60;
+                restDuration = 10 * 60;
+                xpReward = 50;
+            }
+            resetTimer();
+        }
+
+        // 切換階段 (專注 <-> 休息)
+        function switchPhase() {
+            if (isWorkPhase) {
+                gainXP(xpReward);
+                isWorkPhase = false;
+                timeLeft = restDuration;
+                phaseText.textContent = '☕ 休息時間';
+                centerPanel.classList.add('rest-mode');
+            } else {
+                isWorkPhase = true;
+                timeLeft = workDuration;
+                phaseText.textContent = '🧠 專注時間';
+                centerPanel.classList.remove('rest-mode');
+            }
+            updateTimerDisplay();
+        }
+
+        // 🌟 核心倒數邏輯 (將原本寫在 start 裡的東西獨立出來)
+        function tick() {
+            if (timeLeft <= 0) return; // 防呆保護
+
+            timeLeft--;
+            updateTimerDisplay();
+
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+
+                // 等待 1 秒，讓 00:00 的進度條完整歸零
+                phaseTimeout = setTimeout(() => {
+                    if (isRunning) {
+                        isRunning = false; // 關鍵修復：解除執行狀態，讓下個階段可以順利觸發
+                        switchPhase();
+                        startTimer(); // 自動開始下一階段
                     }
-                    resetProgressBarInstantly(); 
-                // ... 前面是 if (isFocusMode) { ... }
-                    } else {
-                        // 🌟 修改：給予動態設定的經驗值
-                        gainXP(currentXpReward); 
-                        timeLeft = breakTimeSetting; 
-                        pet.textContent = '💤';
-                        pet.classList.remove('pet-focus');
-                        // 🌟 修改：讓畫面上的提示文字顯示正確的數字
-                        petStatus.textContent = `太棒了！獲得 ${currentXpReward} XP。`;
-                    }
+                }, 1000);
+            }
+        }
 
-                updateDisplay();
-
-                if (progressWrapper && timeLeft >= 0) {
-                    const totalTime = isFocusMode ? focusTimeSetting : breakTimeSetting; 
-                    const percent = (timeLeft / totalTime) * 100;
-                    progressWrapper.style.setProperty('--progress', `${percent}%`);
-                }                  
-            }, 1000);
+        function startTimer() {
+            if (!isRunning && timeLeft > 0) {
+                isRunning = true;
+                
+                // 關鍵修復：按下的瞬間立刻執行一次 tick，讓數字和進度條馬上開始動！
+                tick(); 
+                
+                // 接著才開始每秒重複
+                timerId = setInterval(tick, 1000);
+            }
         }
 
         function pauseTimer() {
-            if (!isRunning) return; // 如果已經暫停，按 pause 沒反應
-            clearInterval(timer);
+            clearInterval(timerId);
+            clearTimeout(phaseTimeout); // 如果在 00:00 的延遲期間按下暫停，也要一併取消
             isRunning = false;
-            pet.classList.remove('pet-focus');
-            petStatus.textContent = '計時已暫停';
-            if (progressWrapper) progressWrapper.style.transition = 'none';
+
+            // 如果剛好在 00:00 時按下暫停，直接切換階段並保持暫停
+            if (timeLeft <= 0) {
+                switchPhase();
+            }
         }
 
         function resetTimer() {
-            clearInterval(timer); 
-            isRunning = false;    
-            isFocusMode = true;   
-            timeLeft = focusTimeSetting; // 🌟 修改：改成抓取當前模式的時間，而不是寫死 10
-            updateDisplay();          
-            
-            resetProgressBarInstantly();
-            
-            pet.textContent = '🦖';
-            pet.classList.remove('pet-focus');
-            petStatus.textContent = '等待專注中...';
+            clearInterval(timerId);
+            clearTimeout(phaseTimeout);
+            isRunning = false;
+            isWorkPhase = true;
+            timeLeft = workDuration;
+            phaseText.textContent = '🧠 專注時間';
+            centerPanel.classList.remove('rest-mode');
+            updateTimerDisplay();
         }
 
-        // --- 綁定按鈕事件 ---
         startBtn.addEventListener('click', startTimer);
         pauseBtn.addEventListener('click', pauseTimer);
         resetBtn.addEventListener('click', resetTimer);
 
-        // --- 初始化 ---
-        updateDisplay();
-        updateLevelDisplay();
-        if (progressWrapper) progressWrapper.style.setProperty('--progress', `100%`);
+        // 初始化
+        updateXPDisplay();
+        updateTimerDisplay();
 
-        // --- 🌟 新增：取得模式切換按鈕 ---
-        const mode25Btn = document.getElementById('mode-25');
-        const mode50Btn = document.getElementById('mode-50');
 
-        // --- 🌟 替換：切換模式邏輯 ---
-        function setMode(focusMin, breakMin, activeBtn, inactiveBtn) {
-            // 如果計時器正在跑，不允許切換模式
-            if (isRunning) return; 
-            
-            // 設定新的時間 (分鐘轉秒數)
-            focusTimeSetting = focusMin * 60; 
-            breakTimeSetting = breakMin * 60;
-            
-            // 🌟 新增：根據選擇的分鐘數設定對應的經驗值
-            if (focusMin === 25) {
-                currentXpReward = 150;
-            } else if (focusMin === 50) {
-                currentXpReward = 400;
+        // === 音樂播放邏輯 ===
+        const audioPlayer = document.getElementById('bg-audio');
+        let currentPlaying = null;
+        
+        // 你的音樂連結
+        const audioSources = {
+            'nature': 'https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=birds-in-the-forest-12051.mp3',
+            'lofi': 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3',
+            'ocean': 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_8241fc95df.mp3?filename=light-rain-109591.mp3' 
+        };
+
+        function toggleAudio(type, btnElement) {
+            if (currentPlaying === type) {
+                audioPlayer.pause();
+                btnElement.classList.remove('active');
+                currentPlaying = null;
+                return;
             }
-            
-            // 更改按鈕外觀
-            activeBtn.classList.add('active');
-            inactiveBtn.classList.remove('active');
-            
-            // 重置計時器
-            resetTimer(); 
+            document.querySelectorAll('.audio-btn').forEach(btn => btn.classList.remove('active'));
+            audioPlayer.src = audioSources[type];
+            audioPlayer.play();
+            btnElement.classList.add('active');
+            currentPlaying = type;
         }
-
-        // 綁定點擊事件
-        mode25Btn.addEventListener('click', () => setMode(25, 5, mode25Btn, mode50Btn));
-        mode50Btn.addEventListener('click', () => setMode(50, 10, mode50Btn, mode25Btn));
     </script>
 </body>
 </html>
