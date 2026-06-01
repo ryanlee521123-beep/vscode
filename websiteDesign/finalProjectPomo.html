@@ -39,6 +39,22 @@
             font-weight: 700;
         }
 
+        /* 🌟 新增：語言切換下拉選單樣式 */
+        #lang-switch {
+            background: var(--panel-bg);
+            color: var(--text-main);
+            border: 1px solid var(--shadow-light);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+        #lang-switch:focus {
+            border-color: var(--accent-cyan);
+        }
         /* 主要排版區塊 */
         .main-layout {
             display: flex;
@@ -320,8 +336,8 @@
 
         <section class="center-panel" id="center-panel">
             <div class="mode-selector">
-                <button class="mode-btn active" data-mode="25" onclick="setMode('25', this)">25 / 5 分鐘</button>
-                <button class="mode-btn" data-mode="50" onclick="setMode('50', this)">50 / 10 分鐘</button>
+                <button class="mode-btn active" data-mode="25" onclick="setMode('25', this)" data-i18n="mode25">25 / 5 分鐘</button>
+                <button class="mode-btn" data-mode="50" onclick="setMode('50', this)" data-i18n="mode50">50 / 10 分鐘</button>
             </div>
 
             <p class="phase-text" id="phase-text">🧠 專注時間</p>
@@ -353,13 +369,13 @@
         <section class="right-panel">
             <div class="audio-list">
                 <button class="audio-btn" onclick="toggleAudio('nature', this)">
-                    <span class="audio-icon">🌲</span> Nature Sounds
+                    <span class="audio-icon">🌲</span> <span data-i18n="audioNature">Nature Sounds</span>
                 </button>
                 <button class="audio-btn" onclick="toggleAudio('lofi', this)">
-                    <span class="audio-icon">🎧</span> Lofi Music
+                    <span class="audio-icon">🎧</span> <span data-i18n="audioLofi">Lofi Music</span>
                 </button>
                 <button class="audio-btn" onclick="toggleAudio('ocean', this)">
-                    <span class="audio-icon">🌊</span> Ocean Waves
+                    <span class="audio-icon">🌊</span> <span data-i18n="audioOcean">Ocean Waves</span>
                 </button>
             </div>
         </section>
@@ -369,6 +385,45 @@
     <audio id="bg-audio" loop></audio>
 
     <script>
+        // === 🌟 新增：語言系統邏輯 ===
+        const i18n = {
+            zh: {
+                levelPrefix: "等級",
+                mode25: "25 / 5 分鐘",
+                mode50: "50 / 10 分鐘",
+                phaseWork: "🧠 專注時間",
+                phaseRest: "☕ 休息時間",
+                audioNature: "大自然聲音",
+                audioLofi: "Lofi 音樂",
+                audioOcean: "海浪白噪音"
+            },
+            en: {
+                levelPrefix: "Focus Level",
+                mode25: "25 / 5 Min",
+                mode50: "50 / 10 Min",
+                phaseWork: "🧠 Focus Time",
+                phaseRest: "☕ Break Time",
+                audioNature: "Nature Sounds",
+                audioLofi: "Lofi Music",
+                audioOcean: "Ocean Waves"
+            }
+        };
+        let currentLang = 'zh'; // 預設語言
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            
+            // 1. 更新有 data-i18n 標籤的靜態文字
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                el.textContent = i18n[lang][key];
+            });
+            
+            // 2. 更新動態文字
+            updateXPDisplay();
+            phaseText.textContent = isWorkPhase ? i18n[lang].phaseWork : i18n[lang].phaseRest;
+        }
+
         // === 經驗值系統邏輯 ===
         let currentLevel = 1;
         let currentXP = 0;
@@ -380,9 +435,10 @@
             return level * 100; // 第一級100，第二級200，呈現線性
         }
 
+        // 替換原有的 updateXPDisplay
         function updateXPDisplay() {
             const requiredXP = getRequiredXP(currentLevel);
-            levelText.textContent = `Focus Level: ${currentLevel} (${currentXP}/${requiredXP} XP)`;
+            levelText.textContent = `${i18n[currentLang].levelPrefix}: ${currentLevel} (${currentXP}/${requiredXP} XP)`;
             const percent = (currentXP / requiredXP) * 100;
             xpBar.style.width = `${percent}%`;
         }
@@ -472,24 +528,24 @@
             resetTimer();
         }
 
-        // 切換階段 (專注 <-> 休息)
+        // 替換原有的 switchPhase
         function switchPhase() {
             if (isWorkPhase) {
                 gainXP(xpReward);
                 isWorkPhase = false;
                 timeLeft = restDuration;
-                phaseText.textContent = '☕ 休息時間';
+                phaseText.textContent = i18n[currentLang].phaseRest;
                 centerPanel.classList.add('rest-mode');
             } else {
                 isWorkPhase = true;
                 timeLeft = workDuration;
-                phaseText.textContent = '🧠 專注時間';
+                phaseText.textContent = i18n[currentLang].phaseWork;
                 centerPanel.classList.remove('rest-mode');
             }
             updateTimerDisplay();
         }
 
-        // 🌟 核心倒數邏輯 (將原本寫在 start 裡的東西獨立出來)
+        // 核心倒數邏輯 (將原本寫在 start 裡的東西獨立出來)
         function tick() {
             if (timeLeft <= 0) return; // 防呆保護
 
@@ -533,13 +589,14 @@
             }
         }
 
+        // 替換原有的 resetTimer
         function resetTimer() {
             clearInterval(timerId);
             clearTimeout(phaseTimeout);
             isRunning = false;
             isWorkPhase = true;
             timeLeft = workDuration;
-            phaseText.textContent = '🧠 專注時間';
+            phaseText.textContent = i18n[currentLang].phaseWork;
             centerPanel.classList.remove('rest-mode');
             updateTimerDisplay();
         }
@@ -577,6 +634,9 @@
             btnElement.classList.add('active');
             currentPlaying = type;
         }
+
+        changeLanguage(currentLang);
+        
     </script>
 </body>
 </html>
