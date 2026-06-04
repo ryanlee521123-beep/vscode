@@ -159,14 +159,15 @@
             filter: drop-shadow(0 0 10px rgba(139, 233, 253, 0.4));
         }
 
-        /* 告訴 CSS 圖片要往上拉多長 (120px * 格數) */
+        /* 🌟 修正：配合放大的貓咪 (240px)，重新計算移動距離 */
         @keyframes play-6-frames {
-            100% { background-position: 0 -720px; } 
+            /* 240px * 6格 = 1440px */
+            100% { background-position: 0 -1440px; } 
         }
 
-        /* 🌟 修復：移動到 840px 的位置 */
         @keyframes play-die {
-            100% { background-position: 0 -840px; } 
+            /* 240px * 7格 = 1680px */
+            100% { background-position: 0 -1680px; } 
         }
 
         .character-img {
