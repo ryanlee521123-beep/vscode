@@ -121,53 +121,50 @@
             align-items: center;
         }
         /* ================= 🌟 新增：貓咪像素動畫系統 ================= */
+        /* ================= 🌟 替換：像素貓咪動畫系統 (修復破圖版) ================= */
         .pixel-cat {
-            width: 240px;  /* 🌟 將寬度從 120px 改為 240px，貓咪變大兩倍 */
-            height: 240px; /* 🌟 同時將高度也改為 240px，保持正方形 */
-            
-            /* 🌟 以下屬性保持不變，確保放大後依然清晰、比例正確且有光暈 */
+            width: 240px;  
+            height: 240px;
             background-repeat: no-repeat;
             image-rendering: pixelated; 
-            background-size: 100% auto;
+            /* 🌟 把原本這裡的 background-size: 100% auto; 刪掉了，移到下方個別設定 */
             filter: drop-shadow(0 0 10px rgba(139, 233, 253, 0.3));
         }
 
         .cat-idle {
             background-image: url('WhiteCatIdle.png');
-            /* 6 格動畫，0.8秒無限循環 */
-            animation: play-6-frames 0.8s steps(6) infinite;
+            background-size: 100% 600%; /* 🌟 關鍵修復：強制總高度為 6 倍 (6格) */
+            animation: play-6-frames 0.6s steps(6) infinite;
         }
 
         .cat-run {
             background-image: url('WhiteCatRun.png');
-            /* 狂奔狀態：播放速度加快到 0.4秒 */
-            animation: play-6-frames 0.4s steps(6) infinite;
-            filter: drop-shadow(0 0 15px rgba(80, 250, 123, 0.5)); /* 狂奔時光暈變色 */
+            background-size: 100% 600%; /* 🌟 關鍵修復：強制總高度為 6 倍 (6格) */
+            animation: play-6-frames 0.25s steps(6) infinite;
+            filter: drop-shadow(0 0 15px rgba(80, 250, 123, 0.5)); 
         }
 
-        /* 🌟 修復：確保 Die 停在真正的最後一格 (8格動畫走7步) */
         .cat-die {
             background-image: url('WhiteCatDie.png');
+            background-size: 100% 800%; /* 🌟 關鍵修復：Die 這張物理上有 8 格，所以設 800% */
             animation: play-die 0.8s steps(7) forwards;
             filter: drop-shadow(0 0 10px rgba(255, 85, 85, 0.4));
         }
 
-        /* 🌟 新增：重新爬起來的 Revive 動畫 (加上 reverse 讓動畫倒帶) */
         .cat-revive {
             background-image: url('WhiteCatDie.png');
+            background-size: 100% 800%; 
             animation: play-die 0.8s steps(7) reverse forwards;
             filter: drop-shadow(0 0 10px rgba(139, 233, 253, 0.4));
         }
 
-        /* 🌟 修正：配合放大的貓咪 (240px)，重新計算移動距離 */
+        /* 🌟 移動距離也要對應確保是 240px 的整數倍 */
         @keyframes play-6-frames {
-            /* 240px * 6格 = 1440px */
-            100% { background-position: 0 -1440px; } 
+            100% { background-position: 0 -1440px; } /* 240px * 6 = 1440px */
         }
 
         @keyframes play-die {
-            /* 240px * 7格 = 1680px */
-            100% { background-position: 0 -1680px; } 
+            100% { background-position: 0 -1680px; } /* 240px * 7 = 1680px */
         }
 
         .character-img {
