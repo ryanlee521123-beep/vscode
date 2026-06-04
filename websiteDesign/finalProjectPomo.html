@@ -710,22 +710,17 @@
         }
 
         function startTimer() {
-    if (!isRunning && timeLeft > 0) {
-        isRunning = true;
-        
-        if (progressWrapper) progressWrapper.style.transition = '--progress 1s linear';
-
-        if (isFocusMode) {
-            // ... 這裡是你原本控制貓咪或文字的邏輯 ...
-        } else {
-            // ... 這裡是你原本控制貓咪或文字的邏輯 ...
+            // 確保沒有計時器在背景跑，且時間大於 0 才執行
+            if (!isRunning && timeLeft > 0) {
+                isRunning = true;
+                
+                // 🌟 關鍵修復：先登記計時器 ID，再執行 tick，徹底避免兩倍速 bug
+                timerId = setInterval(tick, 1000);
+                
+                // 按下的瞬間立刻執行一次 tick，讓數字馬上開始動
+                tick(); 
+            }
         }
-
-        // 🌟 關鍵修復：必須先建立計時器，再執行第一次 tick 🌟
-        timerId = setInterval(tick, 1000);
-        tick(); 
-    }
-}
 
         function pauseTimer() {
             clearInterval(timerId);
