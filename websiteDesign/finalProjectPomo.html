@@ -704,12 +704,22 @@
         }
 
         function startTimer() {
-            if (!isRunning && timeLeft > 0) {
-                isRunning = true;
-                tick(); 
-                timerId = setInterval(tick, 1000);
-            }
+    if (!isRunning && timeLeft > 0) {
+        isRunning = true;
+        
+        if (progressWrapper) progressWrapper.style.transition = '--progress 1s linear';
+
+        if (isFocusMode) {
+            // ... 這裡是你原本控制貓咪或文字的邏輯 ...
+        } else {
+            // ... 這裡是你原本控制貓咪或文字的邏輯 ...
         }
+
+        // 🌟 關鍵修復：必須先建立計時器，再執行第一次 tick 🌟
+        timerId = setInterval(tick, 1000);
+        tick(); 
+    }
+}
 
         function pauseTimer() {
             clearInterval(timerId);
