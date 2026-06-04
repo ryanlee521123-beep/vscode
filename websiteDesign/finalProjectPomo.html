@@ -121,13 +121,15 @@
             align-items: center;
         }
         /* ================= 🌟 新增：貓咪像素動畫系統 ================= */
+        /* ================= 🌟 替換：放大像素貓咪 ================= */
         .pixel-cat {
-            width: 120px;  /* 控制貓咪在畫面上的大小 (可自行放大縮小) */
-            height: 120px;
+            width: 240px;  /* 🌟 將寬度從 120px 改為 240px，貓咪變大兩倍 */
+            height: 240px; /* 🌟 同時將高度也改為 240px，保持正方形 */
+            
+            /* 🌟 以下屬性保持不變，確保放大後依然清晰、比例正確且有光暈 */
             background-repeat: no-repeat;
-            image-rendering: pixelated; /* 🌟 關鍵：保持像素顆粒感，不會糊掉 */
+            image-rendering: pixelated; 
             background-size: 100% auto;
-            /* 讓貓咪有一點微光暈，融入背景 */
             filter: drop-shadow(0 0 10px rgba(139, 233, 253, 0.3));
         }
 
@@ -144,11 +146,18 @@
             filter: drop-shadow(0 0 15px rgba(80, 250, 123, 0.5)); /* 狂奔時光暈變色 */
         }
 
+        /* 🌟 修復：確保 Die 停在真正的最後一格 (8格動畫走7步) */
         .cat-die {
             background-image: url('WhiteCatDie.png');
-            /* 8 格動畫，播放 1 秒後「停在最後一格」(死掉躺平) */
-            animation: play-die 1s steps(7) forwards;
+            animation: play-die 0.8s steps(7) forwards;
             filter: drop-shadow(0 0 10px rgba(255, 85, 85, 0.4));
+        }
+
+        /* 🌟 新增：重新爬起來的 Revive 動畫 (加上 reverse 讓動畫倒帶) */
+        .cat-revive {
+            background-image: url('WhiteCatDie.png');
+            animation: play-die 0.8s steps(7) reverse forwards;
+            filter: drop-shadow(0 0 10px rgba(139, 233, 253, 0.4));
         }
 
         /* 告訴 CSS 圖片要往上拉多長 (120px * 格數) */
@@ -156,9 +165,11 @@
             100% { background-position: 0 -720px; } 
         }
 
+        /* 🌟 修復：移動到 840px 的位置 */
         @keyframes play-die {
             100% { background-position: 0 -840px; } 
         }
+
         .character-img {
             max-width: 100%;
             max-height: 100%;
@@ -814,25 +825,42 @@
         }
 
         // === 🌟 新增：更新貓咪狀態邏輯 ===
+        // === 🌟 更新貓咪狀態邏輯 (加入復活機制) ===
         function updateCatState() {
             const petSprite = document.getElementById('pet-sprite');
             if (!petSprite) return;
 
-            // 先移除所有狀態
-            petSprite.classList.remove('cat-idle', 'cat-run', 'cat-die');
+            // 如果貓咪正在「爬起來」，先不要打斷牠的動作
+            if (petSprite.classList.contains('cat-revive')) return;
 
+            let newState = '';
+            
             if (!isWorkPhase) {
-                // 休息時間：死掉
-                petSprite.classList.add('cat-die');
+                newState = 'cat-die';
             } else {
-                // 專注時間
-                if (timeLeft <= 5 * 60) {
-                    // 剩下 5 分鐘 (300秒) 以內：狂奔
-                    petSprite.classList.add('cat-run');
-                } else {
-                    // 大於 5 分鐘：待機
-                    petSprite.classList.add('cat-idle');
+                // 🌟 關鍵：如果本來是死掉的，現在要開始專注了，先觸發「爬起來」動畫
+                if (petSprite.classList.contains('cat-die')) {
+                    petSprite.className = 'pixel-cat cat-revive';
+                    
+                    // 等待 0.8 秒 (剛好是動畫播完的時間)，再次呼叫更新，切換回正常狀態
+                    setTimeout(() => {
+                        petSprite.classList.remove('cat-revive');
+                        updateCatState();
+                    }, 800);
+                    return; // 直接結束這次函數，等 0.8 秒後再說
                 }
+
+                // 正常的專注狀態判斷
+                if (timeLeft <= 5 * 60) {
+                    newState = 'cat-run';
+                } else {
+                    newState = 'cat-idle';
+                }
+            }
+
+            // 如果狀態有改變，才執行換圖
+            if (!petSprite.classList.contains(newState)) {
+                petSprite.className = `pixel-cat ${newState}`;
             }
         }
     </script>
