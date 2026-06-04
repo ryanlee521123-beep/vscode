@@ -120,6 +120,45 @@
             justify-content: center;
             align-items: center;
         }
+        /* ================= 🌟 新增：貓咪像素動畫系統 ================= */
+        .pixel-cat {
+            width: 120px;  /* 控制貓咪在畫面上的大小 (可自行放大縮小) */
+            height: 120px;
+            background-repeat: no-repeat;
+            image-rendering: pixelated; /* 🌟 關鍵：保持像素顆粒感，不會糊掉 */
+            background-size: 100% auto;
+            /* 讓貓咪有一點微光暈，融入背景 */
+            filter: drop-shadow(0 0 10px rgba(139, 233, 253, 0.3));
+        }
+
+        .cat-idle {
+            background-image: url('WhiteCatIdle.png');
+            /* 6 格動畫，0.8秒無限循環 */
+            animation: play-6-frames 0.8s steps(6) infinite;
+        }
+
+        .cat-run {
+            background-image: url('WhiteCatRun.png');
+            /* 狂奔狀態：播放速度加快到 0.4秒 */
+            animation: play-6-frames 0.4s steps(6) infinite;
+            filter: drop-shadow(0 0 15px rgba(80, 250, 123, 0.5)); /* 狂奔時光暈變色 */
+        }
+
+        .cat-die {
+            background-image: url('WhiteCatDie.png');
+            /* 8 格動畫，播放 1 秒後「停在最後一格」(死掉躺平) */
+            animation: play-die 1s steps(7) forwards;
+            filter: drop-shadow(0 0 10px rgba(255, 85, 85, 0.4));
+        }
+
+        /* 告訴 CSS 圖片要往上拉多長 (120px * 格數) */
+        @keyframes play-6-frames {
+            100% { background-position: 0 -720px; } 
+        }
+
+        @keyframes play-die {
+            100% { background-position: 0 -840px; } 
+        }
         .character-img {
             max-width: 100%;
             max-height: 100%;
@@ -415,7 +454,8 @@
             </div>
             
             <div class="character-container">
-                <img class="character-img" id="pet-image" src="https://cdn-icons-png.flaticon.com/512/826/826963.png" alt="My Pet">
+                <!-- 🌟 替換：改用 div 來繪製像素貓咪動畫 -->
+                <div id="pet-sprite" class="pixel-cat cat-idle"></div>
             </div>
         </section>
 
@@ -601,6 +641,10 @@
             const totalDuration = isWorkPhase ? workDuration : restDuration;
             const percent = (timeLeft / totalDuration) * 100;
             setProgress(percent);
+            
+            // 🌟 加入這行：每次時間更新，順便檢查貓咪要不要變身
+            updateCatState(); 
+        }
         }
 
         function setMode(mode, btnElement) {
@@ -766,6 +810,29 @@
                 // 切換為淺色
                 body.setAttribute('data-theme', 'light');
                 themeBtn.textContent = '🌙';
+            }
+        }
+
+        // === 🌟 新增：更新貓咪狀態邏輯 ===
+        function updateCatState() {
+            const petSprite = document.getElementById('pet-sprite');
+            if (!petSprite) return;
+
+            // 先移除所有狀態
+            petSprite.classList.remove('cat-idle', 'cat-run', 'cat-die');
+
+            if (!isWorkPhase) {
+                // 休息時間：死掉
+                petSprite.classList.add('cat-die');
+            } else {
+                // 專注時間
+                if (timeLeft <= 5 * 60) {
+                    // 剩下 5 分鐘 (300秒) 以內：狂奔
+                    petSprite.classList.add('cat-run');
+                } else {
+                    // 大於 5 分鐘：待機
+                    petSprite.classList.add('cat-idle');
+                }
             }
         }
     </script>
