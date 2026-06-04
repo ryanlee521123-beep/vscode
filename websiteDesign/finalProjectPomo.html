@@ -154,7 +154,8 @@
         .cat-revive {
             background-image: url('WhiteCatDie.png');
             background-size: 100% 800%; 
-            animation: play-die 0.8s steps(7) reverse forwards;
+            /* 換成 play-revive，拿掉 reverse 屬性 */
+            animation: play-revive 0.8s steps(7) forwards;
             filter: drop-shadow(0 0 10px rgba(139, 233, 253, 0.4));
         }
 
@@ -165,6 +166,11 @@
 
         @keyframes play-die {
             100% { background-position: 0 -1680px; } /* 240px * 7 = 1680px */
+        }
+
+        @keyframes play-revive {
+            0% { background-position: 0 -1680px; } /* 從最底下 (躺平) 開始 */
+            100% { background-position: 0 0; }     /* 播回到最上面 (站起來) */
         }
 
         .character-img {
